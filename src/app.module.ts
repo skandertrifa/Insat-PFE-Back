@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
+import { GestionAnneeModule } from './gestion-annee/gestion-annee.module';
 import * as dotenv from 'dotenv';
 dotenv.config();
 
@@ -23,7 +24,8 @@ dotenv.config();
         synchronize: true,
         }
     ),
-    AuthModule],
+    AuthModule,
+    GestionAnneeModule],
   controllers: [AppController],
   providers: [AppService],
 })
