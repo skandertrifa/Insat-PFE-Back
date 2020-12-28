@@ -1,7 +1,7 @@
 import {  Repository, UpdateResult } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AnneeEntity } from './entities/annee.entity';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, ConflictException, BadRequestException } from '@nestjs/common';
 import { AnneeDto } from './dto/annee.dto';
 
 
@@ -13,8 +13,17 @@ export class AnneeService {
   ) {}
   async create(anneeDto: AnneeDto): Promise<Partial<AnneeEntity>> {
     console.log({...anneeDto})
-    const annee =  this.AnneeRepository.create({...anneeDto});
+    try{
+
+      const annee =  this.AnneeRepository.create({...anneeDto});
+    
     return await this.AnneeRepository.save(annee);
+    }
+    catch(e){
+      if(e.errno==1062)
+        throw new ConflictException(`L'annee est deja existante`);
+      throw new BadRequestException("Request not accepted")
+    }
   }
 
   async findAll(): Promise<Partial<AnneeEntity[]>> {
