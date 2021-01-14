@@ -3,9 +3,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
-import { GestionAnneeModule } from './gestion_annee/gestion_annee.module';
-import { GestionSessionModule } from './gestion_session/gestion_session.module';
-import { GestionSoutenanceModule } from './gestion_soutenance/gestion_soutenance.module';
+import { GestionAnneeModule } from './gestion-annee/gestion_annee.module';
+import { GestionSessionModule } from './gestion-session/gestion_session.module';
+import { GestionSoutenanceModule } from './gestion-soutenance/gestion_soutenance.module';
 import * as dotenv from 'dotenv';
 dotenv.config();
 
