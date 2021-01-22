@@ -20,7 +20,6 @@ export class PassportJWTStrategy extends PassportStrategy(Strategy){
     }
 
     async validate(payload: any){
-        console.log(payload);
         const user = await this.userRepository.findOne({email: payload.email});
         if (user){
             delete user.salt;

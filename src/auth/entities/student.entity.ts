@@ -27,12 +27,7 @@ export class StudentEntity {
     })
     filiere: string;
 
-    @Column({
-        nullable:true
-    })
-    rapportPFEPath:string
-
-    @OneToOne(()=>SujetEntity)
+    @OneToOne(()=>SujetEntity,{cascade:true,eager:true})
     @JoinColumn()
     sujet:SujetEntity
 

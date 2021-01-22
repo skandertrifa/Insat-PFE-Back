@@ -1,11 +1,10 @@
 import { extname } from 'path';
 
 //Rapport PFE 
-
 export const editFileNameRapporPfe = (req, file, callback) => {
     const name = file.originalname.split('.')[0];
     const fileExtName = extname(file.originalname);
-    const randomName = Array(4)
+    const randomName = Array(6)
       .fill(null)
       .map(() => Math.round(Math.random() * 16).toString(16))
       .join('');
