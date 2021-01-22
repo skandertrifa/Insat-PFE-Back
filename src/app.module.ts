@@ -7,10 +7,14 @@ import { GestionAnneeModule } from './gestion-annee/gestion_annee.module';
 import { GestionSessionModule } from './gestion-session/gestion_session.module';
 import { GestionSoutenanceModule } from './gestion-soutenance/gestion_soutenance.module';
 import * as dotenv from 'dotenv';
+import { MulterModule } from '@nestjs/platform-express';
 dotenv.config();
 
 @Module({
   imports: [
+    MulterModule.register({
+      dest: './uploads',
+    }),
     TypeOrmModule.forRoot(
       {
         type: 'mysql',

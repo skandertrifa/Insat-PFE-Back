@@ -1,3 +1,4 @@
+import { StudentEntity } from './entities/student.entity';
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
@@ -12,7 +13,7 @@ dotenv.config();
   controllers: [AuthController],
   providers: [AuthService, PassportJWTStrategy],
   imports: [ 
-    TypeOrmModule.forFeature([UserEntity]),
+    TypeOrmModule.forFeature([UserEntity,StudentEntity]),
     PassportModule.register({defaultStrategy: 'jwt'}),
     JwtModule.register({
       secret: process.env.SECRET,

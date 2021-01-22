@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { StudentEntity } from './student.entity';
+import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { TimeStamp } from './../../generics/timestamp';
 
 export enum userRoleEnum {
@@ -36,4 +37,8 @@ export class UserEntity extends TimeStamp{
         default: userRoleEnum.USER
     })
     role: string
+
+    @OneToOne(()=>StudentEntity,{cascade:true,eager:true})
+    @JoinColumn()
+    studentDetails : StudentEntity
 }
