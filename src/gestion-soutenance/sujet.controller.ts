@@ -1,7 +1,7 @@
 import { SujetService } from './sujet.service';
 import { SujetDto } from './dto/sujet.dto';
 import { Body, Controller, Get, Post, Put,Delete, Param} from '@nestjs/common';
-import { runInThisContext } from 'vm';
+
 
 @Controller('sujet')
 export class SujetController {
@@ -23,14 +23,14 @@ export class SujetController {
 
     @Get(':id')
     findOne(
-        @Param('id') id:String
+        @Param('id') id:number
     ){
         return this.sujetService.findOne(+id);
     }
 
     @Put(':id')
     updateOne(
-        @Param('id') id:String,
+        @Param('id') id:number,
         @Body() sujet:SujetDto
     ){
         return this.sujetService.update(+id,sujet);
@@ -39,7 +39,7 @@ export class SujetController {
 
     @Delete(':id')
     delete(
-        @Param('id') id:String
+        @Param('id') id:number
     ){
         return this.sujetService.delete(+id);
 

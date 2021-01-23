@@ -11,5 +11,5 @@ export class SujetDto {
     dateDepot: Date;
 
     @IsNotEmpty()
-    description: String;
+    description: string;
 }

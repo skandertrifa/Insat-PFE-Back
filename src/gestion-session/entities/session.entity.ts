@@ -1,10 +1,10 @@
-
-
 import { TimeStamp } from 'src/generics/timestamp';
 import { AnneeEntity } from 'src/gestion-annee/entities/annee.entity';
-import { Column, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
+import { SoutenanceEntity } from 'src/gestion-soutenance/entities/soutenance.entity';
+import { Column, ManyToOne, OneToMany } from 'typeorm';
 import { PrimaryGeneratedColumn } from 'typeorm';
 import { Entity } from 'typeorm';
+
 
 @Entity('Session')
 export class SessionEntity extends TimeStamp{
@@ -25,4 +25,10 @@ export class SessionEntity extends TimeStamp{
     @ManyToOne(() => AnneeEntity,(annee : AnneeEntity) => annee.sessions,
     { nullable: false, onUpdate: 'CASCADE', })
     annee: AnneeEntity;
+
+    @OneToMany(() => SoutenanceEntity, (soutenance : SoutenanceEntity) => soutenance.session,
+    { nullable: true,onDelete: 'CASCADE', onUpdate: 'CASCADE', })
+    soutenances: SoutenanceEntity[];
+
+    
 }

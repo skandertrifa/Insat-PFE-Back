@@ -15,6 +15,9 @@ import { SessionController } from './session.controller';
     
     TypeOrmModule.forFeature([SessionEntity]),
     forwardRef(() =>GestionAnneeModule),
+  ],
+  exports:[
+    SessionService
   ]
 })
 export class GestionSessionModule {}

@@ -18,7 +18,7 @@ export class SujetEntity extends TimeStamp{
     dateLimiteDepot: Date;
 
     @Column()
-    description: String;
+    description: string;
 
     @OneToOne(()=>RapportPfeEntity,{cascade:true,eager:true})
     @JoinColumn()
