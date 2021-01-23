@@ -1,6 +1,6 @@
 import { teachersFileMetadata } from './utils/teachersFileMetadata.class';
 import { TeacherService } from './teacher.service';
-import { BadRequestException, Body, Controller, Post, Req, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, Post, Req, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express'
 import { diskStorage } from 'multer';
 import { editFileNameTeachers, teachersFileFilter } from './utils/file-uploads.utils';
@@ -35,5 +35,11 @@ export class TeacherController {
         return this.teacherService.generateTeachers(metadata,file.path) 
 
 
+    }
+
+    //get all 
+    @Get()
+    findAll(){
+        return this.teacherService.findAll();
     }
 }

@@ -40,10 +40,12 @@ export const prepareTeachers = async (data)=>{
     const teachers = []
     for (var i=0;i<data.length;i++){
         const {nom,prenom,email} = data[i]
+        const teacherDetails = {}
         const teacher = {nom,prenom,
         password:nom,
         email,
         salt:await bcrypt.genSalt(),
+        teacherDetails,
     }
     teacher.password = await bcrypt.hash(teacher.password,teacher.salt);
     teachers.push(teacher)

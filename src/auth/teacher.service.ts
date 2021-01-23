@@ -1,3 +1,4 @@
+import { TeacherEntity } from 'src/auth/entities/teacher.entity';
 import { teachersFileMetadata } from './utils/teachersFileMetadata.class';
 import { Injectable, NotAcceptableException } from '@nestjs/common';
 import * as xlsx from 'xlsx';
@@ -11,6 +12,8 @@ export class TeacherService {
     constructor(
         @InjectRepository(UserEntity)
         private userRepository: Repository<UserEntity>,
+        @InjectRepository(TeacherEntity)
+        private teacherRepository: Repository<TeacherEntity>,
     ){}
     async generateTeachers(metadata:teachersFileMetadata,filePath){
 
@@ -39,5 +42,11 @@ export class TeacherService {
         }
 
     }
+
+
+    async findAll(): Promise<TeacherEntity[]> {
+        const teachers=await this.teacherRepository.find({relations:['userDetails']})
+        return teachers
+      }
 
 }
