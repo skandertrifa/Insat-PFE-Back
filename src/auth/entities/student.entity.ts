@@ -1,5 +1,6 @@
 import { SujetEntity } from './../../gestion-soutenance/entities/sujet.entity';
 import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { UserEntity } from './user.entity';
 
 export enum Filiere{
     GL ="GL",
@@ -13,7 +14,7 @@ export enum Filiere{
 export class StudentEntity {
 
     @PrimaryGeneratedColumn()
-    id:string
+    id:number
 
     @Column({unique:true})
     cin: string
@@ -27,6 +28,9 @@ export class StudentEntity {
     })
     filiere: string;
 
+    @OneToOne(()=>UserEntity,user=>user.studentDetails)
+    userDetails : UserEntity
+    
     @OneToOne(()=>SujetEntity,{cascade:true,eager:true})
     @JoinColumn()
     sujet:SujetEntity

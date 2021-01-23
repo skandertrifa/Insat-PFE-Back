@@ -1,26 +1,26 @@
-import { StudentEntity } from './entities/student.entity';
+import { TeacherEntity } from 'src/auth/entities/teacher.entity';
+import { teachersFileMetadata } from './utils/teachersFileMetadata.class';
 import { Injectable, NotAcceptableException } from '@nestjs/common';
 import * as xlsx from 'xlsx';
-import { studentsFileMetadata } from './utils/studentsFileMetadata.class';
-import { changeKeys, prepareStudents } from './utils/prepare-users.utils';
+import { changeKeys, prepareTeachers } from './utils/prepare-users.utils';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from './entities/user.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()
-export class StudentService {
-
+export class TeacherService {
     constructor(
         @InjectRepository(UserEntity)
         private userRepository: Repository<UserEntity>,
-        @InjectRepository(StudentEntity)
-        private studentRepository: Repository<StudentEntity>,
+        @InjectRepository(TeacherEntity)
+        private teacherRepository: Repository<TeacherEntity>,
     ){}
-    async generateStudents(metadata:studentsFileMetadata,filePath){
+    async generateTeachers(metadata:teachersFileMetadata,filePath){
 
         const xlsxFile = xlsx.readFile(filePath)    
         const sheet = xlsxFile.Sheets[xlsxFile.SheetNames[0]] 
         var data = xlsx.utils.sheet_to_json(sheet,{raw:true,defval:null})
+        console.log(data)
         // check that data not empty 
         if (data.length>0){
             //check that keys match what was sent with the post request
@@ -28,7 +28,7 @@ export class StudentService {
             JSON.stringify(Object.values(metadata) )){
                 try{
                 await data.forEach(jsonObj=>changeKeys(jsonObj,Object.keys(metadata)))
-                const users = await prepareStudents(data)
+                const users = await prepareTeachers(data)
                 return await this.userRepository.save(users)
                 }catch(e){
                     throw new NotAcceptableException('Vérifier les entréss de votre fichier')
@@ -43,8 +43,10 @@ export class StudentService {
 
     }
 
-    async findAll(): Promise<StudentEntity[]> {
-        const students=await this.studentRepository.find({relations:['userDetails']})
-        return students
+
+    async findAll(): Promise<TeacherEntity[]> {
+        const teachers=await this.teacherRepository.find({relations:['userDetails']})
+        return teachers
       }
+
 }

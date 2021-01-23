@@ -1,3 +1,4 @@
+import { TeacherEntity } from 'src/auth/entities/teacher.entity';
 import { RapportPfeEntity } from './../gestion-soutenance/entities/rapportPfe.entity';
 import { StudentEntity } from './entities/student.entity';
 import { Module } from '@nestjs/common';
@@ -13,12 +14,14 @@ import { StudentController } from './student.controller';
 import { StudentService } from './student.service';
 import { RapportController } from './rapport.controller';
 import { RapportService } from './rapport.service';
+import { TeacherController } from './teacher.controller';
+import { TeacherService } from './teacher.service';
 dotenv.config();
 @Module({
-  controllers: [AuthController, StudentController, RapportController],
-  providers: [AuthService, PassportJWTStrategy, StudentService, RapportService],
+  controllers: [AuthController, StudentController, RapportController, TeacherController],
+  providers: [AuthService, PassportJWTStrategy, StudentService, RapportService, TeacherService],
   imports: [ 
-    TypeOrmModule.forFeature([UserEntity,StudentEntity,RapportPfeEntity]),
+    TypeOrmModule.forFeature([UserEntity,StudentEntity,RapportPfeEntity,TeacherEntity]),
     PassportModule.register({defaultStrategy: 'jwt'}),
     JwtModule.register({
       secret: process.env.SECRET,

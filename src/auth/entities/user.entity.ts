@@ -1,3 +1,4 @@
+import { TeacherEntity } from './teacher.entity';
 import { StudentEntity } from './student.entity';
 import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { TimeStamp } from './../../generics/timestamp';
@@ -38,7 +39,11 @@ export class UserEntity extends TimeStamp{
     })
     role: string
 
-    @OneToOne(()=>StudentEntity,{cascade:true,eager:true})
+    @OneToOne(()=>StudentEntity,student=>student.userDetails,{cascade:true})
     @JoinColumn()
     studentDetails : StudentEntity
+
+    @OneToOne(()=>TeacherEntity,teacher=>teacher.userDetails,{cascade:true})
+    @JoinColumn()
+    teacherDetails : TeacherEntity
 }
