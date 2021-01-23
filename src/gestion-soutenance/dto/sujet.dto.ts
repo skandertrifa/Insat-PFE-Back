@@ -8,7 +8,7 @@ export class SujetDto {
     @IsNotEmpty()
     @Transform((x)=>new Date(x))
     @MinDate(new Date())
-    dateDepot: Date;
+    dateLimiteDepot: Date;
 
     @IsNotEmpty()
     description: string;
