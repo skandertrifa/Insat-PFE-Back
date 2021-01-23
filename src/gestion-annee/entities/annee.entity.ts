@@ -1,4 +1,5 @@
-import { Column } from 'typeorm';
+import { SessionEntity } from './../../gestion-session/entities/session.entity';
+import { Column, JoinColumn, OneToMany, PrimaryColumn } from 'typeorm';
 import { PrimaryGeneratedColumn } from 'typeorm';
 import { Entity } from 'typeorm';
 import { TimeStamp } from '../../generics/timestamp';
@@ -13,10 +14,10 @@ export class AnneeEntity  extends TimeStamp
         unique:true,
     })
     annee: number
-    /*@Column({
-        unique:true,
-        type:"date"
-    })
-    annee: Date*/
+
+    
+    @OneToMany(() => SessionEntity, (session : SessionEntity) => session.annee,
+    { nullable: true,onDelete: 'CASCADE', onUpdate: 'CASCADE', })
+    sessions: SessionEntity[];
 
 }

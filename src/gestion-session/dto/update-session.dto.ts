@@ -1,8 +1,12 @@
-//import { PartialType } from '@nestjs/mapped-types';
-//import { CreateSessionDto } from './create-session.dto';
+import { IsOptional } from 'class-validator';
 
-//export class UpdateSessionDto extends PartialType(CreateSessionDto) {
 export class UpdateSessionDto {
+    @IsOptional()
     dateDebut: Date;
+
+    @IsOptional()
     dateFin: Date;
+
+    @IsOptional()
+    anneeId: number;
 }

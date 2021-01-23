@@ -1,5 +1,8 @@
+
+
 import { TimeStamp } from 'src/generics/timestamp';
-import { Column } from 'typeorm';
+import { AnneeEntity } from 'src/gestion-annee/entities/annee.entity';
+import { Column, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 import { PrimaryGeneratedColumn } from 'typeorm';
 import { Entity } from 'typeorm';
 
@@ -17,4 +20,9 @@ export class SessionEntity extends TimeStamp{
         type:"date"
     })
     dateFin: Date;
+
+    
+    @ManyToOne(() => AnneeEntity,(annee : AnneeEntity) => annee.sessions,
+    { nullable: false, onUpdate: 'CASCADE', })
+    annee: AnneeEntity;
 }

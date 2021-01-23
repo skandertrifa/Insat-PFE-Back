@@ -34,15 +34,13 @@ export class AnneeService {
   async findOne(id: number): Promise<Partial<AnneeEntity>> {
     const annees = await this.AnneeRepository.find({id});
     if (annees[0])
-      return {
-        annee:annees[0].annee
-      };
+      return annees[0]
     throw new NotFoundException(`L'annee d'id ${id} n'est pas disponible`);
   }
 
   async update(id: number, updateDto: AnneeDto): Promise<Partial<AnneeEntity>> {
     const annee = await this.AnneeRepository.preload({
-      id: +id,
+      id: id,
       ...updateDto
     });
     if (!annee) {
