@@ -13,7 +13,9 @@ export const changeKeys = async (jsonObject,newKeys)=>{
     return jsonObject
 };
 
-export const getUsers = async (data)=>{
+
+// prepare students for saving in the db 
+export const prepareStudents = async (data)=>{
     const users = []
     for (var i=0;i<data.length;i++){
         const {cin,idEtudiant,filiere} = data[i]
@@ -31,5 +33,22 @@ export const getUsers = async (data)=>{
     }
     
     return users
+};
+
+// prepare teachers for saving in the db 
+export const prepareTeachers = async (data)=>{
+    const teachers = []
+    for (var i=0;i<data.length;i++){
+        const {nom,prenom,email} = data[i]
+        const teacher = {nom,prenom,
+        password:nom,
+        email,
+        salt:await bcrypt.genSalt(),
+    }
+    teacher.password = await bcrypt.hash(teacher.password,teacher.salt);
+    teachers.push(teacher)
+    }
+    
+    return teachers
 };
 

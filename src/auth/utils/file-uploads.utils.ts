@@ -34,3 +34,20 @@ export const studentsFileFilter = (req, file, callback) => {
     }
     callback(null, true);
 };
+
+
+//teachers File
+export const editFileNameTeachers = (req, file, callback) => {
+  const fileExtName = extname(file.originalname);
+  callback(null, `teachers${fileExtName}`);
+};
+
+export const teachersFileFilter = (req, file, callback) => {
+  // Only Excel fiels are accepted
+  if (file.mimetype!="application/vnd.ms-excel" &&
+      file.mimetype!="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") {
+      req.fileValidationError = 'Seulment les ficheirs excel sont acceptés';
+      return callback(null, false);
+  }
+  callback(null, true);
+};
