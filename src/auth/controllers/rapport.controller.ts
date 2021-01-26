@@ -1,5 +1,5 @@
-import { RapportService } from './rapport.service';
-import { editFileNameRapporPfe, rapportPfeFileFilter } from './utils/file-uploads.utils';
+import { RapportService } from '../services/rapport.service';
+import { editFileNameRapporPfe, rapportPfeFileFilter } from '../utils/file-uploads.utils';
 import { BadRequestException,Controller, Post, Req, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express'
 import { diskStorage } from 'multer';

@@ -1,5 +1,5 @@
-import { SujetDto } from './dto/sujet.dto';
-import { SujetEntity } from './entities/sujet.entity';
+import { SujetDto } from '../dto/sujet.dto';
+import { SujetEntity } from '../entities/sujet.entity';
 import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, UpdateResult } from 'typeorm';

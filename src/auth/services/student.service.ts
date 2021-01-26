@@ -1,10 +1,10 @@
-import { StudentEntity } from './entities/student.entity';
+import { StudentEntity } from '../entities/student.entity';
 import { Injectable, NotAcceptableException } from '@nestjs/common';
 import * as xlsx from 'xlsx';
-import { studentsFileMetadata } from './utils/studentsFileMetadata.class';
-import { changeKeys, prepareStudents } from './utils/prepare-users.utils';
+import { studentsFileMetadata } from '../utils/studentsFileMetadata.class';
+import { changeKeys, prepareStudents } from '../utils/prepare-users.utils';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UserEntity } from './entities/user.entity';
+import { UserEntity } from '../entities/user.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()

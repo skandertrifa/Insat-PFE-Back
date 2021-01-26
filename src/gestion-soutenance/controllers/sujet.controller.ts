@@ -1,5 +1,5 @@
-import { SujetService } from './sujet.service';
-import { SujetDto } from './dto/sujet.dto';
+import { SujetService } from '../services/sujet.service';
+import { SujetDto } from '../dto/sujet.dto';
 import { Body, Controller, Get, Post, Put,Delete, Param} from '@nestjs/common';
 
 

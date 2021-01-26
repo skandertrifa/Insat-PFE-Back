@@ -1,9 +1,9 @@
 import { Repository, UpdateResult } from 'typeorm';
-import { SalleEntity } from './entities/salle.entity';
+import { SalleEntity } from '../entities/salle.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable, NotFoundException, ConflictException, BadRequestException } from '@nestjs/common';
-import { CreateSalleDto } from './dto/create-salle.dto';
-import { UpdateSalleDto } from './dto/update-salle.dto';
+import { CreateSalleDto } from '../dto/create-salle.dto';
+import { UpdateSalleDto } from '../dto/update-salle.dto';
 
 @Injectable()
 export class SalleService {

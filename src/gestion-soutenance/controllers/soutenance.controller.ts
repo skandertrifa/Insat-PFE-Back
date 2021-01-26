@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, Put, Param, Delete } from '@nestjs/common';
-import { SoutenanceService } from './soutenance.service';
-import { CreateSoutenanceDto } from './dto/create-soutenance.dto';
-import { UpdateSoutenanceDto } from './dto/update-soutenance.dto';
+import { SoutenanceService } from '../services/soutenance.service';
+import { CreateSoutenanceDto } from '../dto/create-soutenance.dto';
+import { UpdateSoutenanceDto } from '../dto/update-soutenance.dto';
 
 @Controller('soutenance')
 export class SoutenanceController {

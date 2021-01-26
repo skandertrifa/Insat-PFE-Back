@@ -1,10 +1,10 @@
 import { TeacherEntity } from 'src/auth/entities/teacher.entity';
-import { teachersFileMetadata } from './utils/teachersFileMetadata.class';
+import { teachersFileMetadata } from '../utils/teachersFileMetadata.class';
 import { Injectable, NotAcceptableException } from '@nestjs/common';
 import * as xlsx from 'xlsx';
-import { changeKeys, prepareTeachers } from './utils/prepare-users.utils';
+import { changeKeys, prepareTeachers } from '../utils/prepare-users.utils';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UserEntity } from './entities/user.entity';
+import { UserEntity } from '../entities/user.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()

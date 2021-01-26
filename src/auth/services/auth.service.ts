@@ -1,11 +1,10 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
-import { UserRegisterDto } from './dto/user-register';
+import { UserRegisterDto } from '../dto/user-register';
 import * as bcrypt from 'bcrypt';
 import { Repository } from 'typeorm';
-import { UserEntity } from './entities/user.entity';
+import { UserEntity } from '../entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UserLoginDto } from './dto/user-login';
-import { StudentEntity } from './entities/student.entity';
+import { UserLoginDto } from '../dto/user-login';
 import { JwtService } from '@nestjs/jwt';
 
 

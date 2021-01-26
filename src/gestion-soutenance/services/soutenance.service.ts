@@ -1,10 +1,10 @@
-import { SessionService } from './../gestion-session/session.service';
+import { SessionService } from '../../gestion-session/services/session.service';
 import { forwardRef, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, UpdateResult } from 'typeorm';
-import { CreateSoutenanceDto } from './dto/create-soutenance.dto';
-import { UpdateSoutenanceDto } from './dto/update-soutenance.dto';
-import { SoutenanceEntity } from './entities/soutenance.entity';
+import { CreateSoutenanceDto } from '../dto/create-soutenance.dto';
+import { UpdateSoutenanceDto } from '../dto/update-soutenance.dto';
+import { SoutenanceEntity } from '../entities/soutenance.entity';
 import { SalleService } from './salle.service';
 import { SujetService } from './sujet.service';
 

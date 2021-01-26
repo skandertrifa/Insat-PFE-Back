@@ -1,9 +1,9 @@
-import { teachersFileMetadata } from './utils/teachersFileMetadata.class';
-import { TeacherService } from './teacher.service';
+import { teachersFileMetadata } from '../utils/teachersFileMetadata.class';
+import { TeacherService } from '../services/teacher.service';
 import { BadRequestException, Body, Controller, Get, Post, Req, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express'
 import { diskStorage } from 'multer';
-import { editFileNameTeachers, teachersFileFilter } from './utils/file-uploads.utils';
+import { editFileNameTeachers, teachersFileFilter } from '../utils/file-uploads.utils';
 
 @Controller('teacher')
 export class TeacherController {

@@ -1,10 +1,10 @@
-import { AnneeService } from './../gestion-annee/annee.service';
+import { AnneeService } from '../../gestion-annee/services/annee.service';
 import { Repository } from 'typeorm';
-import { SessionEntity } from './entities/session.entity';
+import { SessionEntity } from '../entities/session.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import {  forwardRef, Inject, Injectable, NotFoundException } from '@nestjs/common';
-import { CreateSessionDto } from './dto/create-session.dto';
-import { UpdateSessionDto } from './dto/update-session.dto';
+import { CreateSessionDto } from '../dto/create-session.dto';
+import { UpdateSessionDto } from '../dto/update-session.dto';
 import { UpdateResult } from 'typeorm';
 
 @Injectable()

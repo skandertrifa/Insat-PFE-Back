@@ -1,6 +1,6 @@
-import { RapportPfeEntity } from './../gestion-soutenance/entities/rapportPfe.entity';
+import { RapportPfeEntity } from '../../gestion-soutenance/entities/rapportPfe.entity';
 import { Repository } from 'typeorm';
-import { UserEntity } from './entities/user.entity';
+import { UserEntity } from '../entities/user.entity';
 import { Injectable, NotAcceptableException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 

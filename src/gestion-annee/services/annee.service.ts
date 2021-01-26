@@ -1,8 +1,8 @@
 import {  Repository, UpdateResult } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { AnneeEntity } from './entities/annee.entity';
+import { AnneeEntity } from '../entities/annee.entity';
 import { Injectable, NotFoundException, ConflictException, BadRequestException } from '@nestjs/common';
-import { AnneeDto } from './dto/annee.dto';
+import { AnneeDto } from '../dto/annee.dto';
 
 
 @Injectable()

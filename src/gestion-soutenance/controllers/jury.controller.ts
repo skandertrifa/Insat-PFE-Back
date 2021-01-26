@@ -1,6 +1,6 @@
-import { JuryService } from './jury.service';
+import { JuryService } from '../services/jury.service';
 import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
-import { JuryDto } from './dto/jury.dto';
+import { JuryDto } from '../dto/jury.dto';
 
 @Controller('jury')
 export class JuryController {
@@ -23,14 +23,14 @@ export class JuryController {
     
     @Get(':id')
     findOne(
-        @Param('id') id:String
+        @Param('id') id:string
     ){
         return this.juryService.findOne(+id);
     }
 
     @Delete(':id')
     delete(
-        @Param('id') id:String
+        @Param('id') id:string
     ){
         return this.juryService.delete(+id);
 

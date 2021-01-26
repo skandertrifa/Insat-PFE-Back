@@ -1,7 +1,7 @@
 import { TeacherEntity } from 'src/auth/entities/teacher.entity';
-import { JuryDto } from './dto/jury.dto';
-import { JuryEntity } from './entities/jury.entity';
-import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { JuryDto } from '../dto/jury.dto';
+import { JuryEntity } from '../entities/jury.entity';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, UpdateResult } from 'typeorm';
 

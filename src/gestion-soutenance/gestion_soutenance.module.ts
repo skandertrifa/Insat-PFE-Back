@@ -1,20 +1,20 @@
-import { JuryController } from './jury.controller';
+import { JuryController } from './controllers/jury.controller';
 import { GestionSessionModule } from './../gestion-session/gestion_session.module';
 import { SoutenanceEntity } from './entities/soutenance.entity';
-import { SoutenanceService } from './soutenance.service';
-import { SoutenanceController } from './soutenance.controller';
+import { SoutenanceService } from './services/soutenance.service';
+import { SoutenanceController } from './controllers/soutenance.controller';
 import { TeacherEntity } from 'src/auth/entities/teacher.entity';
 import { JuryEntity } from './entities/jury.entity';
 import { SujetEntity } from './entities/sujet.entity';
 import { SalleEntity } from './entities/salle.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Module } from '@nestjs/common';
-import { SalleService } from './salle.service';
-import { SalleController } from './salle.controller';
-import { SujetController } from './sujet.controller';
-import { SujetService } from './sujet.service';
+import { SalleService } from './services/salle.service';
+import { SalleController } from './controllers/salle.controller';
+import { SujetController } from './controllers/sujet.controller';
+import { SujetService } from './services/sujet.service';
 
-import { JuryService } from './jury.service';
+import { JuryService } from './services/jury.service';
 
 
 @Module({

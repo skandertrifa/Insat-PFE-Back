@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, Put, Param, Delete } from '@nestjs/common';
-import { SalleService } from './salle.service';
-import { CreateSalleDto } from './dto/create-salle.dto';
-import { UpdateSalleDto } from './dto/update-salle.dto';
+import { SalleService } from '../services/salle.service';
+import { CreateSalleDto } from '../dto/create-salle.dto';
+import { UpdateSalleDto } from '../dto/update-salle.dto';
 
 @Controller('salle')
 export class SalleController {
