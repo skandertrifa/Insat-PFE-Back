@@ -44,7 +44,31 @@ export class StudentService {
     }
 
     async findAll(): Promise<StudentEntity[]> {
-        const students=await this.studentRepository.find({relations:['userDetails']})
+        // const students=await this.studentRepository.find({
+        //     //relations:['userDetails']
+        //     select: [
+        //         "cin",
+        //         "filiere",
+        //         "sujet",
+        //         "id",
+        //         "userDetails",
+        //     ],
+
+        // });
+        const students=await this.studentRepository
+        .createQueryBuilder('student')
+        .select([
+            'student.id',
+            'student.cin',
+            'student.filiere',
+            'student.sujet',
+            'userDetails.id',
+            'userDetails.email',
+            'userDetails.nom',
+            'userDetails.prenom',
+        ])
+        .leftJoin('student.userDetails', 'userDetails')  // userDetails is the joined table
+        .getMany();
         return students
       }
 }
