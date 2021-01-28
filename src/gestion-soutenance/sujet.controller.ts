@@ -23,14 +23,14 @@ export class SujetController {
 
     @Get(':id')
     findOne(
-        @Param('id') id:number
+        @Param('id') id:string
     ){
         return this.sujetService.findOne(+id);
     }
 
     @Put(':id')
     updateOne(
-        @Param('id') id:number,
+        @Param('id') id:string,
         @Body() sujet:SujetDto
     ){
         return this.sujetService.update(+id,sujet);
@@ -39,7 +39,7 @@ export class SujetController {
 
     @Delete(':id')
     delete(
-        @Param('id') id:number
+        @Param('id') id:string
     ){
         return this.sujetService.delete(+id);
 

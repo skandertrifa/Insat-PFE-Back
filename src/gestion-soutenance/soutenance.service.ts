@@ -7,8 +7,9 @@ import { UpdateSoutenanceDto } from './dto/update-soutenance.dto';
 import { SoutenanceEntity } from './entities/soutenance.entity';
 import { SalleService } from './salle.service';
 import { SujetService } from './sujet.service';
+import { JuryService } from './jury.service';
 
-const relations=["session","salle","sujet"]
+const relations=["session","salle","sujet","jury"]
 
 @Injectable()
 export class SoutenanceService {
@@ -21,7 +22,9 @@ export class SoutenanceService {
     @Inject(forwardRef(() => SessionService)) 
     private readonly sessionService: SessionService,
     @Inject(forwardRef(() => SujetService)) 
-    private readonly sujetService: SalleService
+    private readonly sujetService: SujetService,
+    @Inject(forwardRef(() => JuryService)) 
+    private readonly juryService: JuryService
   ) {}
   async getRelationEntities(dto)
   {
@@ -33,6 +36,8 @@ export class SoutenanceService {
       objects["session"]= await this.sessionService.findOne(dto.sessionId)
     if (typeof dto.sujetId!= "undefined")
       objects["sujet"]= await this.sujetService.findOne(dto.sujetId)
+    if (typeof dto.juryId!= "undefined")
+      objects["jury"]= await this.sujetService.findOne(dto.juryId)
 
     return objects
   }
