@@ -37,7 +37,7 @@ export class SoutenanceService {
     if (typeof dto.sujetId!= "undefined")
       objects["sujet"]= await this.sujetService.findOne(dto.sujetId)
     if (typeof dto.juryId!= "undefined")
-      objects["jury"]= await this.sujetService.findOne(dto.juryId)
+      objects["jury"]= await this.juryService.findOne(dto.juryId)
 
     return objects
   }
@@ -45,9 +45,9 @@ export class SoutenanceService {
     
     const objects=await this.getRelationEntities(createSoutenanceDto)
     //console.log("objects : ",objects)
-    const Soutenance =  await this.soutenanceRepository.create({...createSoutenanceDto,...objects});
-    console.log("soutenance creation : ",Soutenance)
-    return await this.soutenanceRepository.save(Soutenance);
+    const soutenance =  await this.soutenanceRepository.create({...createSoutenanceDto,...objects});
+    //console.log("soutenance creation : ",soutenance)
+    return await this.soutenanceRepository.save(soutenance);
     
   }
   
@@ -56,16 +56,18 @@ export class SoutenanceService {
     const Soutenances=await this.soutenanceRepository.find({ relations: relations })
     for (const soutenance of Soutenances){
       soutenance.session = await this.sessionService.findOne(soutenance.session.id);
+      soutenance.jury = await this.juryService.findOne(soutenance.jury.id);
     }
     return Soutenances
   }
 
   async findOne(id: number): Promise<SoutenanceEntity> {
-    const Soutenance = await this.soutenanceRepository.findOne(id,{relations:relations});
-    console.log("soutenance : ",Soutenance)
-    if (Soutenance){
-      Soutenance.session = await this.sessionService.findOne(Soutenance.session.id);
-      Soutenance
+    const soutenance = await this.soutenanceRepository.findOne(id,{relations:relations});
+    console.log("soutenance : ",soutenance)
+    if (soutenance){
+      soutenance.session = await this.sessionService.findOne(soutenance.session.id);
+      soutenance.jury = await this.juryService.findOne(soutenance.jury.id);
+      return soutenance
     }
 
       
@@ -74,15 +76,15 @@ export class SoutenanceService {
 
   async update(id: number, updateSoutenanceDto: UpdateSoutenanceDto): Promise<Partial<SoutenanceEntity>> {
     const objects=await this.getRelationEntities(updateSoutenanceDto)
-    const Soutenance = await this.soutenanceRepository.preload({
+    const soutenance = await this.soutenanceRepository.preload({
       id: +id,
       ...updateSoutenanceDto,
       ...objects
     });
-    if (!Soutenance) {
+    if (!soutenance) {
       new NotFoundException(`La Soutenance d'id ${id} n'existe pas`);
     }
-    return await this.soutenanceRepository.save(Soutenance)
+    return await this.soutenanceRepository.save(soutenance)
   }
 
   async delete(id: number): Promise<UpdateResult> {

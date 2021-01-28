@@ -11,6 +11,9 @@ export class SessionEntity extends TimeStamp{
     @PrimaryGeneratedColumn()
     id: number;
 
+    @Column()
+    name: string;
+
     @Column({
         type:"date"
     })
