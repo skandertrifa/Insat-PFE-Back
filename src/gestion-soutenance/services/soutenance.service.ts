@@ -44,22 +44,31 @@ export class SoutenanceService {
   async create(createSoutenanceDto: CreateSoutenanceDto): Promise<Partial<SoutenanceEntity>> {
     
     const objects=await this.getRelationEntities(createSoutenanceDto)
-    console.log("objects : ",objects)
+    //console.log("objects : ",objects)
     const Soutenance =  await this.soutenanceRepository.create({...createSoutenanceDto,...objects});
+    console.log("soutenance creation : ",Soutenance)
     return await this.soutenanceRepository.save(Soutenance);
     
   }
   
 
-  async findAll(): Promise<Partial<SoutenanceEntity[]>> {
+  async findAll(): Promise<SoutenanceEntity[]> {
     const Soutenances=await this.soutenanceRepository.find({ relations: relations })
+    for (const soutenance of Soutenances){
+      soutenance.session = await this.sessionService.findOne(soutenance.session.id);
+    }
     return Soutenances
   }
 
-  async findOne(id: number): Promise<Partial<SoutenanceEntity>> {
+  async findOne(id: number): Promise<SoutenanceEntity> {
     const Soutenance = await this.soutenanceRepository.findOne(id,{relations:relations});
-    if (Soutenance)
-      return Soutenance
+    console.log("soutenance : ",Soutenance)
+    if (Soutenance){
+      Soutenance.session = await this.sessionService.findOne(Soutenance.session.id);
+      Soutenance
+    }
+
+      
     throw new NotFoundException(`La Soutenance d'id ${id} n'est pas disponible`);
   }
 

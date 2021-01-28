@@ -27,12 +27,12 @@ export class SessionService {
   }
   
 
-  async findAll(): Promise<Partial<SessionEntity[]>> {
+  async findAll(): Promise<SessionEntity[]> {
     const sessions=await this.sessionRepository.find({ relations: ['annee'] })
     return sessions
   }
 
-  async findOne(id: number): Promise<Partial<SessionEntity>> {
+  async findOne(id: number): Promise<SessionEntity> {
     const session = await this.sessionRepository.findOne(id,{relations:['annee']});
     if (session)
       return session
