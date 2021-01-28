@@ -9,6 +9,7 @@ import { PrimaryGeneratedColumn } from 'typeorm';
 import { Entity } from 'typeorm';
 import { SalleEntity } from './salle.entity';
 import { SujetEntity } from './sujet.entity';
+import { JuryEntity } from './jury.entity';
 
 @Entity('Soutenance')
 export class SoutenanceEntity extends TimeStamp{
@@ -31,6 +32,10 @@ export class SoutenanceEntity extends TimeStamp{
     @ManyToOne(() => SalleEntity,(salle : SalleEntity) => salle.soutenances,
     { nullable: true, onUpdate: 'CASCADE', })
     salle: SalleEntity;
+
+    @ManyToOne(() => JuryEntity,(jury : JuryEntity) => jury.soutenances,
+    { nullable: true, onUpdate: 'CASCADE', })
+    jury: JuryEntity;
 
     @OneToOne(()=>SujetEntity,
     { nullable: true, onUpdate: 'CASCADE', })
