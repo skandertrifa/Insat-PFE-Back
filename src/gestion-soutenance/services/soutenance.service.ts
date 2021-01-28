@@ -8,7 +8,11 @@ import { SoutenanceEntity } from '../entities/soutenance.entity';
 import { SalleService } from './salle.service';
 import { SujetService } from './sujet.service';
 import { JuryService } from './jury.service';
-
+import {
+  paginate,
+  Pagination,
+  IPaginationOptions,
+} from 'nestjs-typeorm-paginate';
 const relations=["session","salle","sujet","jury"]
 
 @Injectable()
@@ -50,10 +54,31 @@ export class SoutenanceService {
     return await this.soutenanceRepository.save(soutenance);
     
   }
-  
+  async length():Promise<number>{
+    return this.soutenanceRepository.count()
+  }
+
+  async findAllPaginated(page:number): Promise<any> {
+    if(page<=0)
+      page=1
+    const limit=10
+    const soutenances=await this.soutenanceRepository.find({ relations: relations,skip:limit*(page-1),take:limit })
+    for (const soutenance of soutenances){
+      soutenance.session = await this.sessionService.findOne(soutenance.session.id);
+      soutenance.jury = await this.juryService.findOne(soutenance.jury.id);
+    }
+
+    const paginationMeta= {
+      "currentPage": page,
+      "itemsPerPage": limit,
+      "totalPages": Math.ceil(await this.length()/limit),
+    }
+
+    return {"items":soutenances,...paginationMeta}
+  }
 
   async findAll(): Promise<SoutenanceEntity[]> {
-    const Soutenances=await this.soutenanceRepository.find({ relations: relations })
+    const Soutenances=await this.soutenanceRepository.find({ relations: relations})
     for (const soutenance of Soutenances){
       soutenance.session = await this.sessionService.findOne(soutenance.session.id);
       soutenance.jury = await this.juryService.findOne(soutenance.jury.id);
@@ -92,4 +117,5 @@ export class SoutenanceService {
     return await this.soutenanceRepository.softDelete(id);
  
   }
+
 }

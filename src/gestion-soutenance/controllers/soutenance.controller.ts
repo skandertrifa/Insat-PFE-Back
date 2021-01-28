@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Put, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Put, Param, Delete, Query, ParseIntPipe } from '@nestjs/common';
 import { SoutenanceService } from '../services/soutenance.service';
 import { CreateSoutenanceDto } from '../dto/create-soutenance.dto';
 import { UpdateSoutenanceDto } from '../dto/update-soutenance.dto';
@@ -13,8 +13,9 @@ export class SoutenanceController {
   }
 
   @Get()
-  findAll() {
-    return this.soutenanceService.findAll();
+  async findAll(@Query('page', ParseIntPipe) page = 1) {
+    return this.soutenanceService.findAllPaginated(page);
+    
   }
 
   @Get(':id')
