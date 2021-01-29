@@ -25,7 +25,7 @@ export class JuryController {
     findOne(
         @Param('id') id:string
     ){
-        //return this.juryService.findOne(+id);
+        return this.juryService.findOne(+id);
     }
 
     @Delete(':id')
