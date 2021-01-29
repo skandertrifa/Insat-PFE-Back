@@ -1,11 +1,11 @@
 import { TeacherEntity } from 'src/auth/entities/teacher.entity';
 import { teachersFileMetadata } from '../utils/teachersFileMetadata.class';
-import { Injectable, NotAcceptableException } from '@nestjs/common';
+import { Injectable, NotAcceptableException, NotFoundException } from '@nestjs/common';
 import * as xlsx from 'xlsx';
 import { changeKeys, prepareTeachers } from '../utils/prepare-users.utils';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from '../entities/user.entity';
-import { Repository } from 'typeorm';
+import { Repository, UpdateResult } from 'typeorm';
 
 @Injectable()
 export class TeacherService {
@@ -45,8 +45,42 @@ export class TeacherService {
 
 
     async findAll(): Promise<TeacherEntity[]> {
-        const teachers=await this.teacherRepository.find({relations:['userDetails']})
+        const teachers=await this.teacherRepository
+        .createQueryBuilder('teacher')
+        .select([
+            'teacher.id',
+            'userDetails.id',
+            'userDetails.email',
+            'userDetails.nom',
+            'userDetails.prenom',
+        ])
+        .leftJoin('teacher.userDetails', 'userDetails')  // userDetails is the joined table
+        .getMany();
         return teachers
       }
 
+
+      async findOne(id: number): Promise<Partial<TeacherEntity>> {
+        const teacher = await this.teacherRepository
+        .createQueryBuilder('teacher')
+        .select([
+            'teacher.id',
+            'userDetails.id',
+            'userDetails.email',
+            'userDetails.nom',
+            'userDetails.prenom',
+        ])
+        .leftJoin('teacher.userDetails', 'userDetails')  // userDetails is the joined table
+        .where('teacher.id = :id',{id:id})
+        .getOne()
+        
+        if (teacher)
+          return teacher
+        throw new NotFoundException(`L'enseignant d'id ${id} n'est pas disponible`);
+      }
+    
+    
+      async delete(id: number): Promise<UpdateResult> {
+        return await this.teacherRepository.softDelete(id);
+      }
 }

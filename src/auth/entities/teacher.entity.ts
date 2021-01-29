@@ -1,10 +1,11 @@
 import { UserEntity } from './user.entity';
 import { JuryEntity } from './../../gestion-soutenance/entities/jury.entity';
 import { Column, Entity, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { TimeStamp } from 'src/generics/timestamp';
 
 
 @Entity('teacher-details')
-export class TeacherEntity {
+export class TeacherEntity extends TimeStamp {
 
     @PrimaryGeneratedColumn()
     id:number

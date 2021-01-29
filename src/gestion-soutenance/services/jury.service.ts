@@ -33,18 +33,27 @@ export class JuryService {
         }
     }
 
+
+    //TODO : 'build a query to retrive jury with its members and president and with only
+    //important fields (name, id,email)'; 
+    
     async findAll(): Promise<JuryEntity[]> {
         const juries=await this.juryRepositroy.find({relations:['president','members']});
         return juries
       }
 
-    async findOne(id:number): Promise<JuryEntity> {
-        const jury=await this.juryRepositroy.findOne(id,{relations:['members','president']});
+
+    /*async findOne(id:number): Promise<JuryEntity> {
+        const jury=await this.juryRepositroy.findOne(id,
+            {relations:['members','president']
+        })
+
+
         if (jury){
             return jury
         }
         throw new NotFoundException(`Le jury d'id ${id} n'est pas disponible`);
-    }
+    }*/
 
     async delete(id:number):Promise<UpdateResult> {
         return await this.juryRepositroy.softDelete(id);

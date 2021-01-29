@@ -1,6 +1,6 @@
 import { StudentService } from '../services/student.service';
 import { studentsFileMetadata } from '../utils/studentsFileMetadata.class';
-import { BadRequestException, Body, Controller, Get, Post, Req, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Delete, Get, Param, Post, Put, Req, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express'
 import { diskStorage } from 'multer';
 import { editFileNameStudents, studentsFileFilter } from '../utils/file-uploads.utils';
@@ -38,10 +38,20 @@ export class StudentController {
 
     }
 
-    //get all 
     @Get()
     findAll(){
         return this.studentService.findAll();
+    }
+
+    @Get(':id')
+    findOne(@Param('id') id: string) {
+      return this.studentService.findOne(+id);
+    }
+  
+  
+    @Delete(':id')
+    delete(@Param('id') id: string) {
+      return this.studentService.delete(+id);
     }
     
 }
