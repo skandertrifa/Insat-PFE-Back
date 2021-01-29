@@ -1,11 +1,11 @@
 import { StudentEntity } from '../entities/student.entity';
-import { Injectable, NotAcceptableException } from '@nestjs/common';
+import { Injectable, NotAcceptableException, NotFoundException } from '@nestjs/common';
 import * as xlsx from 'xlsx';
 import { studentsFileMetadata } from '../utils/studentsFileMetadata.class';
 import { changeKeys, prepareStudents } from '../utils/prepare-users.utils';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from '../entities/user.entity';
-import { Repository } from 'typeorm';
+import { Repository, UpdateResult } from 'typeorm';
 
 @Injectable()
 export class StudentService {
@@ -70,5 +70,33 @@ export class StudentService {
         .leftJoin('student.userDetails', 'userDetails')  // userDetails is the joined table
         .getMany();
         return students
+      }
+
+
+      async findOne(id: number): Promise<Partial<StudentEntity>> {
+        const student = await this.studentRepository
+        .createQueryBuilder('student')
+        .select([
+            'student.id',
+            'student.cin',
+            'student.filiere',
+            'student.sujet',
+            'userDetails.id',
+            'userDetails.email',
+            'userDetails.nom',
+            'userDetails.prenom',
+        ])
+        .leftJoin('student.userDetails', 'userDetails')  // userDetails is the joined table
+        .where('student.id = :id',{id:id})
+        .getOne()
+        
+        if (student)
+          return student
+        throw new NotFoundException(`L'etudiant d'id ${id} n'est pas disponible`);
+      }
+    
+    
+      async delete(id: number): Promise<UpdateResult> {
+        return await this.studentRepository.softDelete(id);
       }
 }

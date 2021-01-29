@@ -1,6 +1,7 @@
 import { SujetEntity } from './../../gestion-soutenance/entities/sujet.entity';
 import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { UserEntity } from './user.entity';
+import { TimeStamp } from 'src/generics/timestamp';
 
 export enum Filiere{
     GL ="GL",
@@ -11,7 +12,7 @@ export enum Filiere{
     BIO = "BIO"}
 
 @Entity('student-details')
-export class StudentEntity {
+export class StudentEntity extends TimeStamp {
 
     @PrimaryGeneratedColumn()
     id:number
