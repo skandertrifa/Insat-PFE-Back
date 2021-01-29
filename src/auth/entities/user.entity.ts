@@ -2,6 +2,7 @@ import { TeacherEntity } from './teacher.entity';
 import { StudentEntity } from './student.entity';
 import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { TimeStamp } from './../../generics/timestamp';
+import { classToPlain, Exclude } from 'class-transformer';
 
 export enum userRoleEnum {
     ADMIN = 'admin',
@@ -25,10 +26,12 @@ export class UserEntity extends TimeStamp{
         unique: true
     })
     email: string;
-
+    
+    @Exclude()
     @Column()
     password: string;
 
+    @Exclude()
     @Column()
     salt: string;
 
@@ -46,4 +49,8 @@ export class UserEntity extends TimeStamp{
     @OneToOne(()=>TeacherEntity,teacher=>teacher.userDetails,{cascade:true})
     @JoinColumn()
     teacherDetails : TeacherEntity
+
+    toJSON() {
+        return classToPlain(this);
+      }
 }

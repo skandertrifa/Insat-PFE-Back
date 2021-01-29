@@ -46,6 +46,7 @@ export const prepareTeachers = async (data)=>{
         email,
         salt:await bcrypt.genSalt(),
         teacherDetails,
+        role:userRoleEnum.TEACHER
     }
     teacher.password = await bcrypt.hash(teacher.password,teacher.salt);
     teachers.push(teacher)

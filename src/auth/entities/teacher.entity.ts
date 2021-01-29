@@ -12,11 +12,13 @@ export class TeacherEntity extends TimeStamp {
 
     @OneToOne(()=>UserEntity,user=>user.teacherDetails,{eager:true})
     userDetails : UserEntity
-
     @OneToMany(()=>JuryEntity,jury=>jury.president)
     presidentJuries: JuryEntity[]
     
     @ManyToMany(()=>JuryEntity,jury=>jury.members,{nullable:true})
     juries:JuryEntity[]
-
+    
+    to_json(){
+        
+    }
 }
