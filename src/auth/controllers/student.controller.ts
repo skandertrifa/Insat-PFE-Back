@@ -1,9 +1,14 @@
 import { StudentService } from '../services/student.service';
 import { studentsFileMetadata } from '../utils/studentsFileMetadata.class';
-import { BadRequestException, Body, Controller, Get, Post, Req, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { BadRequestException, Body, Controller, 
+    Get, Post, Req, UploadedFile, UseInterceptors,
+     ParseIntPipe, Query  } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express'
 import { diskStorage } from 'multer';
 import { editFileNameStudents, studentsFileFilter } from '../utils/file-uploads.utils';
+import { StudentEntity } from '../entities/student.entity';
+import { Pagination } from 'nestjs-typeorm-paginate';
+
 
 
 @Controller('student')
@@ -42,6 +47,20 @@ export class StudentController {
     @Get()
     findAll(){
         return this.studentService.findAll();
+    }
+
+    // get paginated
+    @Get('paginate')
+    async index(
+      @Query('page', ParseIntPipe) page = 1,
+      @Query('limit', ParseIntPipe) limit = 10,
+    ): Promise<Pagination<StudentEntity>> {
+      limit = limit > 100 ? 100 : limit;
+      return this.studentService.paginate({
+        page,
+        limit,
+        route: 'http://localhost:4200/Students',
+      });
     }
     
 }
