@@ -28,7 +28,7 @@ dotenv.config();
           "dist/**/*.entity{.ts,.js}"
         ],
         // Ken el marra loula hotouha true w baaed false sinon tjikom mochkla kif t startiw
-        synchronize: false,
+        synchronize: true,
         }
     ),
     AuthModule,
