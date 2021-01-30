@@ -3,17 +3,29 @@ import { SujetEntity } from '../entities/sujet.entity';
 import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, UpdateResult } from 'typeorm';
+import { StudentEntity } from 'src/auth/entities/student.entity';
 
 @Injectable()
 export class SujetService {
     constructor(
         @InjectRepository(SujetEntity)
-        private readonly sujetRepositroy: Repository<SujetEntity>
+        private readonly sujetRepositroy: Repository<SujetEntity>,
+        @InjectRepository(StudentEntity)
+        private readonly etudiantRepository:Repository<StudentEntity>
     ){}
 
+    async length():Promise<number>{
+        return this.sujetRepositroy.count()
+      }
     async create(sujetDto:SujetDto):Promise<SujetEntity>{
-        const sujet = this.sujetRepositroy.create(sujetDto);
         try{
+            const etudiant = await this.etudiantRepository.findOne(sujetDto.idEtudiant)
+            const sujet = await this.sujetRepositroy.create({
+                etudiant:etudiant,
+                description:sujetDto.description,
+                dateLimiteDepot:sujetDto.dateLimiteDepot,
+                titre:sujetDto.titre
+            });
             return await this.sujetRepositroy.save(sujet);
         }
         catch(e){
@@ -27,6 +39,23 @@ export class SujetService {
     async findAll(): Promise<SujetEntity[]> {
         const sujets=await this.sujetRepositroy.find();
         return sujets
+      }
+
+      async findAllPaginated(page:number): Promise<any> {
+        if(page<=0)
+          page=1
+        const limit=10
+        const sujets=await this.sujetRepositroy.find({relations:['etudiant'],skip:limit*(page-1),take:limit })
+
+
+
+        const paginationMeta= {
+          "currentPage": page,
+          "itemsPerPage": limit,
+          "totalPages": Math.ceil(await this.length()/limit),
+        }
+    
+        return {"items":sujets,...paginationMeta}
       }
 
     async findOne(id:number): Promise<SujetEntity> {

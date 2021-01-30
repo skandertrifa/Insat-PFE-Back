@@ -12,4 +12,7 @@ export class SujetDto {
 
     @IsNotEmpty()
     description: string;
+
+    @IsNotEmpty()
+    idEtudiant: number
 }

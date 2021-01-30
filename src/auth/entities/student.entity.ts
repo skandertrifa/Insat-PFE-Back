@@ -29,10 +29,10 @@ export class StudentEntity extends TimeStamp {
     })
     filiere: string;
 
-    @OneToOne(()=>UserEntity,user=>user.studentDetails)
+    @OneToOne(()=>UserEntity,user=>user.studentDetails,{eager:true})
     userDetails : UserEntity
     
-    @OneToOne(()=>SujetEntity,{cascade:true,eager:true})
+    @OneToOne(()=>SujetEntity,{cascade:true})
     @JoinColumn()
     sujet:SujetEntity
 

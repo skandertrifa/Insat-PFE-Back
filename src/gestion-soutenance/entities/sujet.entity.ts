@@ -1,3 +1,4 @@
+import { StudentEntity } from './../../auth/entities/student.entity';
 import { IsDate } from 'class-validator';
 import { TimeStamp } from 'src/generics/timestamp';
 import { Column, JoinColumn, OneToOne } from 'typeorm';
@@ -23,5 +24,9 @@ export class SujetEntity extends TimeStamp{
     @OneToOne(()=>RapportPfeEntity,{cascade:true,eager:true})
     @JoinColumn()
     rapportPfe:RapportPfeEntity
+
+    @OneToOne(()=>StudentEntity,{cascade:true,eager:true})
+    @JoinColumn()
+    etudiant:StudentEntity
 
 }
