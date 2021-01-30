@@ -26,7 +26,7 @@ export class SessionEntity extends TimeStamp{
 
     
     @ManyToOne(() => AnneeEntity,(annee : AnneeEntity) => annee.sessions,
-    { nullable: false, onUpdate: 'CASCADE', })
+    { nullable: true, onUpdate: 'CASCADE', })
     annee: AnneeEntity;
 
     @OneToMany(() => SoutenanceEntity, (soutenance : SoutenanceEntity) => soutenance.session,

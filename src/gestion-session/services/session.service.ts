@@ -18,10 +18,13 @@ export class SessionService {
     private readonly anneeService: AnneeService
   ) {}
   async create(createSessionDto: CreateSessionDto): Promise<Partial<SessionEntity>> {
-
-    const anneeId=createSessionDto.anneeId
-    const annee= await this.anneeService.findOne(anneeId)
-    const session =  await this.sessionRepository.create({...createSessionDto,annee:annee,});
+    const annee={}
+    if (typeof createSessionDto.anneeId!= "undefined")
+    {
+      const anneeId=createSessionDto.anneeId
+      annee["annee"]=await this.anneeService.findOne(anneeId)
+    }
+    const session =  await this.sessionRepository.create({...createSessionDto,...annee});
     return await this.sessionRepository.save(session);
     
   }
