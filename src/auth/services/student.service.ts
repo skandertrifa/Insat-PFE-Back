@@ -78,7 +78,9 @@ export class StudentService {
       }
 
       async paginate(options: IPaginationOptions): Promise<Pagination<StudentEntity>> {
-        const queryBuilder = this.studentRepository.createQueryBuilder('student').select([
+        const queryBuilder = this.studentRepository
+        .createQueryBuilder('student')
+        .select([
             'student.id',
             'student.cin',
             'student.filiere',
@@ -88,7 +90,7 @@ export class StudentService {
             'userDetails.nom',
             'userDetails.prenom',
         ])
-        .leftJoin('student.userDetails', 'userDetails');
+        .leftJoin('student.userDetails', 'userDetails')
     
         return paginate<StudentEntity>(queryBuilder, options);
       }

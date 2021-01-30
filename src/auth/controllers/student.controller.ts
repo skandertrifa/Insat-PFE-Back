@@ -20,6 +20,19 @@ export class StudentController {
         private studentService: StudentService
     ){}
 
+    // get paginated
+    @Get('paginate')
+    async index(
+      @Query('page', ParseIntPipe) page = 1,
+      @Query('limit', ParseIntPipe) limit = 10,
+    ): Promise<Pagination<StudentEntity>> {
+      limit = limit > 100 ? 100 : limit;
+       return this.studentService.paginate({
+         page,
+         limit,
+         route: 'http://localhost:4200/Students',
+       });
+    }
 
     //upload excel file of students and geenrate them in db
     //TODO: add guards (Admin only)
@@ -44,7 +57,7 @@ export class StudentController {
 
 
     }
-
+    
     @Get()
     findAll(){
         return this.studentService.findAll();
@@ -60,19 +73,7 @@ export class StudentController {
     delete(@Param('id') id: string) {
       return this.studentService.delete(+id);
     }
-    // get paginated
-    @Get('paginate')
-    async index(
-      @Query('page', ParseIntPipe) page = 1,
-      @Query('limit', ParseIntPipe) limit = 10,
-    ): Promise<Pagination<StudentEntity>> {
-      limit = limit > 100 ? 100 : limit;
-      return this.studentService.paginate({
-        page,
-        limit,
-        route: 'http://localhost:4200/Students',
-      });
+
     
     
-    }
 }
