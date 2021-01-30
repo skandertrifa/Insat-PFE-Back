@@ -21,7 +21,8 @@ export const prepareStudents = async (data)=>{
         const {cin,idEtudiant,filiere} = data[i]
         const {nom,prenom,email} = data[i]
         const studentDetails = {cin,idEtudiant,filiere}
-        const student = {nom,prenom,
+        const student = {nom,
+        prenom,
         password:idEtudiant.toString(),
         email,
         role:userRoleEnum.USER,

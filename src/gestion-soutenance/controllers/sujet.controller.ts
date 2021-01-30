@@ -1,6 +1,6 @@
 import { SujetService } from '../services/sujet.service';
 import { SujetDto } from '../dto/sujet.dto';
-import { Body, Controller, Get, Post, Put,Delete, Param} from '@nestjs/common';
+import { Body, Controller, Get, Post, Put,Delete, Param, ParseIntPipe, Query} from '@nestjs/common';
 
 
 @Controller('sujet')
@@ -17,8 +17,8 @@ export class SujetController {
     }
 
     @Get()
-    findAll(){
-        return this.sujetService.findAll();
+    findAll(@Query('page', ParseIntPipe) page = 1){
+        return this.sujetService.findAllPaginated(page);
     }
 
     @Get(':id')

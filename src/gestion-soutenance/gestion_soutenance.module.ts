@@ -1,3 +1,4 @@
+import { StudentEntity } from './../auth/entities/student.entity';
 import { JuryController } from './controllers/jury.controller';
 import { GestionSessionModule } from './../gestion-session/gestion_session.module';
 import { SoutenanceEntity } from './entities/soutenance.entity';
@@ -21,8 +22,9 @@ import { JuryService } from './services/jury.service';
   controllers: [SalleController, SujetController,SoutenanceController,JuryController],
   providers: [SalleService, SujetService,SoutenanceService,JuryService],
   imports: [ 
-    TypeOrmModule.forFeature([SalleEntity,SujetEntity,SoutenanceEntity,JuryEntity,TeacherEntity]),
-    GestionSessionModule
+    TypeOrmModule.forFeature([SalleEntity,SujetEntity,SoutenanceEntity,JuryEntity,TeacherEntity,StudentEntity]),
+    GestionSessionModule,
+    StudentEntity
   ],
   exports:[
     SoutenanceService
