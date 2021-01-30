@@ -64,6 +64,7 @@ export class StudentService {
         .createQueryBuilder('student')
         .select([
             'student.id',
+            'student.idEtudiant',
             'student.cin',
             'student.filiere',
             'student.sujet',
@@ -82,6 +83,7 @@ export class StudentService {
         .createQueryBuilder('student')
         .select([
             'student.id',
+            'student.idEtudiant',
             'student.cin',
             'student.filiere',
             'student.sujet',
@@ -101,6 +103,7 @@ export class StudentService {
         .createQueryBuilder('student')
         .select([
             'student.id',
+            'student.idEtudiant',
             'student.cin',
             'student.filiere',
             'student.sujet',

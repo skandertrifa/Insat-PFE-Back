@@ -40,13 +40,13 @@ export class AnneeService {
 
   async update(id: number, updateDto: AnneeDto): Promise<Partial<AnneeEntity>> {
     const annee = await this.AnneeRepository.preload({
-      id: id,
+      id: +id,
       ...updateDto
     });
     if (!annee) {
       new NotFoundException(`L'annee' d'id ${id} n'existe pas`);
     }
-    return annee
+    return this.AnneeRepository.save(annee)
   }
 
   async delete(id: number): Promise<UpdateResult> {
