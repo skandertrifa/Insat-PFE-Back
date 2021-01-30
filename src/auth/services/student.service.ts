@@ -6,6 +6,11 @@ import { changeKeys, prepareStudents } from '../utils/prepare-users.utils';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from '../entities/user.entity';
 import { Repository, UpdateResult } from 'typeorm';
+import {
+    paginate,
+    Pagination,
+    IPaginationOptions,
+  } from 'nestjs-typeorm-paginate';
 
 @Injectable()
 export class StudentService {
@@ -72,6 +77,22 @@ export class StudentService {
         return students
       }
 
+      async paginate(options: IPaginationOptions): Promise<Pagination<StudentEntity>> {
+        const queryBuilder = this.studentRepository.createQueryBuilder('student').select([
+            'student.id',
+            'student.cin',
+            'student.filiere',
+            'student.sujet',
+            'userDetails.id',
+            'userDetails.email',
+            'userDetails.nom',
+            'userDetails.prenom',
+        ])
+        .leftJoin('student.userDetails', 'userDetails');
+    
+        return paginate<StudentEntity>(queryBuilder, options);
+      }
+      
 
       async findOne(id: number): Promise<Partial<StudentEntity>> {
         const student = await this.studentRepository
