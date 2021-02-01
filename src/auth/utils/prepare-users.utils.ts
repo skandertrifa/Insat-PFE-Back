@@ -1,3 +1,5 @@
+import { CreateStudentDto } from './../dto/create-student';
+import { CreateTeacherDto } from './../dto/create-teacher';
 import { userRoleEnum } from "../entities/user.entity";
 import * as bcrypt from 'bcrypt';
 
@@ -14,12 +16,10 @@ export const changeKeys = async (jsonObject,newKeys)=>{
 };
 
 
-// prepare students for saving in the db 
-export const prepareStudents = async (data)=>{
-    const users = []
-    for (var i=0;i<data.length;i++){
-        const {cin,idEtudiant,filiere} = data[i]
-        const {nom,prenom,email} = data[i]
+// prepare a single student for saving in the db 
+export const prepareStudent = async (createStudentDto)=>{
+        const {cin,idEtudiant,filiere} = createStudentDto
+        const {nom,prenom,email} = createStudentDto
         const studentDetails = {cin,idEtudiant,filiere}
         const student = {nom,
         prenom,
@@ -27,20 +27,14 @@ export const prepareStudents = async (data)=>{
         email,
         role:userRoleEnum.USER,
         salt:await bcrypt.genSalt(),
-        studentDetails
-    }
-    student.password = await bcrypt.hash(student.password,student.salt);
-    users.push(student)
-    }
-    
-    return users
+        studentDetails}
+        student.password = await bcrypt.hash(student.password,student.salt);
+    return student
 };
 
 // prepare teachers for saving in the db 
-export const prepareTeachers = async (data)=>{
-    const teachers = []
-    for (var i=0;i<data.length;i++){
-        const {nom,prenom,email} = data[i]
+export const prepareTeacher = async (createTeacherDto)=>{
+        const {nom,prenom,email} = createTeacherDto
         const teacherDetails = {}
         const teacher = {nom,prenom,
         password:nom,
@@ -50,9 +44,6 @@ export const prepareTeachers = async (data)=>{
         role:userRoleEnum.TEACHER
     }
     teacher.password = await bcrypt.hash(teacher.password,teacher.salt);
-    teachers.push(teacher)
-    }
-    
-    return teachers
+    return teacher
 };
 

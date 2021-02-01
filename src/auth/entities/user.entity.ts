@@ -23,7 +23,7 @@ export class UserEntity extends TimeStamp{
     prenom: string
 
     @Column({
-        unique: true
+        unique: false
     })
     email: string;
     
@@ -42,11 +42,11 @@ export class UserEntity extends TimeStamp{
     })
     role: string
 
-    @OneToOne(()=>StudentEntity,student=>student.userDetails,{cascade:true})
+    @OneToOne(()=>StudentEntity,student=>student.userDetails,{cascade:true,onDelete:'CASCADE',onUpdate:'CASCADE'})
     @JoinColumn()
     studentDetails : StudentEntity
 
-    @OneToOne(()=>TeacherEntity,teacher=>teacher.userDetails,{cascade:true})
+    @OneToOne(()=>TeacherEntity,teacher=>teacher.userDetails,{cascade:true,onDelete:'CASCADE',onUpdate:'CASCADE'})
     @JoinColumn()
     teacherDetails : TeacherEntity
 

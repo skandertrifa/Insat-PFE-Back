@@ -1,8 +1,9 @@
+import { CreateTeacherDto } from './../dto/create-teacher';
 import { TeacherEntity } from 'src/auth/entities/teacher.entity';
 import { teachersFileMetadata } from '../utils/teachersFileMetadata.class';
-import { Injectable, NotAcceptableException, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, NotAcceptableException, NotFoundException } from '@nestjs/common';
 import * as xlsx from 'xlsx';
-import { changeKeys, prepareTeachers } from '../utils/prepare-users.utils';
+import { changeKeys, prepareTeacher} from '../utils/prepare-users.utils';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from '../entities/user.entity';
 import { Repository, UpdateResult } from 'typeorm';
@@ -15,6 +16,21 @@ export class TeacherService {
         @InjectRepository(TeacherEntity)
         private teacherRepository: Repository<TeacherEntity>,
     ){}
+
+    async create(createTeacherDto: CreateTeacherDto ): Promise<Partial<UserEntity>> {
+        try{
+            const teacher = await prepareTeacher(createTeacherDto);
+            return await this.userRepository.save(teacher);
+
+        }
+        catch(e){
+          if(e.errno==1062)
+            throw new ConflictException(`L'enseigant dejà existe`);
+          throw new BadRequestException("Request not accepted")
+        }
+      }
+    
+
     async generateTeachers(metadata:teachersFileMetadata,filePath){
 
         const xlsxFile = xlsx.readFile(filePath)    
@@ -28,8 +44,11 @@ export class TeacherService {
             JSON.stringify(Object.values(metadata) )){
                 try{
                 await data.forEach(jsonObj=>changeKeys(jsonObj,Object.keys(metadata)))
-                const users = await prepareTeachers(data)
-                return await this.userRepository.save(users)
+                const teachers = []
+                for(let i=0;i<data.length;i++){
+                    teachers.push(await prepareTeacher(data[i]))
+                }
+                return await this.userRepository.save(teachers)
                 }catch(e){
                     throw new NotAcceptableException('Vérifier les entréss de votre fichier')
                 }

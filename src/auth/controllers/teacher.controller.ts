@@ -1,3 +1,4 @@
+import { CreateTeacherDto } from './../dto/create-teacher';
 import { teachersFileMetadata } from '../utils/teachersFileMetadata.class';
 import { TeacherService } from '../services/teacher.service';
 import { BadRequestException, Body, Controller, Delete, Get, Param, Post, Req, UploadedFile, UseInterceptors } from '@nestjs/common';
@@ -12,6 +13,11 @@ export class TeacherController {
     constructor(
         private teacherService: TeacherService
     ){}
+
+    @Post()
+    createTeacher(@Body() createTeacherDto:CreateTeacherDto ){
+      return this.teacherService.create(createTeacherDto);
+    }
 
     //upload excel file of teachers and geenrate them in db
     //TODO: add guards (Admin only)

@@ -1,8 +1,9 @@
 import { StudentEntity } from '../entities/student.entity';
-import { Injectable, NotAcceptableException, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, NotAcceptableException, NotFoundException } from '@nestjs/common';
 import * as xlsx from 'xlsx';
+import * as bcrypt from 'bcrypt';
 import { studentsFileMetadata } from '../utils/studentsFileMetadata.class';
-import { changeKeys, prepareStudents } from '../utils/prepare-users.utils';
+import { changeKeys, prepareStudent } from '../utils/prepare-users.utils';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from '../entities/user.entity';
 import { Repository, UpdateResult } from 'typeorm';
@@ -11,6 +12,7 @@ import {
     Pagination,
     IPaginationOptions,
   } from 'nestjs-typeorm-paginate';
+import { CreateStudentDto } from '../dto/create-student';
 
 @Injectable()
 export class StudentService {
@@ -21,6 +23,22 @@ export class StudentService {
         @InjectRepository(StudentEntity)
         private studentRepository: Repository<StudentEntity>,
     ){}
+
+
+    async create(createStudentDto: CreateStudentDto ): Promise<Partial<UserEntity>> {
+        try{
+            const student = await prepareStudent(createStudentDto);
+            return await this.userRepository.save(student);
+
+        }
+        catch(e){
+          if(e.errno==1062)
+            throw new ConflictException(`L'etudiant dejà existe`);
+          throw new BadRequestException("Request not accepted")
+        }
+      }
+
+      
     async generateStudents(metadata:studentsFileMetadata,filePath){
 
         const xlsxFile = xlsx.readFile(filePath)    
@@ -32,9 +50,12 @@ export class StudentService {
             if (JSON.stringify(Object.keys(data[0])) == 
             JSON.stringify(Object.values(metadata) )){
                 try{
-                await data.forEach(jsonObj=>changeKeys(jsonObj,Object.keys(metadata)))
-                const users = await prepareStudents(data)
-                return await this.userRepository.save(users)
+                await data.forEach(jsonObj=>changeKeys(jsonObj,Object.keys(metadata)));
+                const users = []
+                for(let i=0;i<data.length;i++){
+                    users.push(await prepareStudent(data[i]))
+                }
+                return await this.userRepository.save(users);
                 }catch(e){
                     throw new NotAcceptableException('Vérifier les entréss de votre fichier')
                 }

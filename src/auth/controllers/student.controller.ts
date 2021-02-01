@@ -1,3 +1,4 @@
+import { CreateStudentDto } from './../dto/create-student';
 import { StudentService } from '../services/student.service';
 import { studentsFileMetadata } from '../utils/studentsFileMetadata.class';
 import { 
@@ -34,6 +35,11 @@ export class StudentController {
        });
     }
 
+    @Post()
+    createStudent(@Body() createStudentDto:CreateStudentDto ){
+      return this.studentService.create(createStudentDto);
+    }
+
     //upload excel file of students and geenrate them in db
     //TODO: add guards (Admin only)
     @Post('upload')
@@ -57,7 +63,7 @@ export class StudentController {
 
 
     }
-    
+
     @Get()
     findAll(){
         return this.studentService.findAll();
