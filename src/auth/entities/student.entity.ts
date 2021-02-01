@@ -32,7 +32,7 @@ export class StudentEntity extends TimeStamp {
     @OneToOne(()=>UserEntity,user=>user.studentDetails,{eager:true})
     userDetails : UserEntity
     
-    @OneToOne(()=>SujetEntity,{cascade:true})
+    @OneToOne(()=>SujetEntity,sujet=>sujet.etudiant,{cascade:true,eager:true})
     @JoinColumn()
     sujet:SujetEntity
 

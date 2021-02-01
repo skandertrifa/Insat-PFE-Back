@@ -31,6 +31,7 @@ export class RapportController {
             throw new BadRequestException('Fichier invalide');
         }
         try{
+        console.log('hereeee')
         await this.rapportService.updateRapportPfe(req.user,file.path);
         }catch(e){
             return e

@@ -17,11 +17,13 @@ export class RapportService {
 
     }
     async updateRapportPfe(user:UserEntity,filePath){
-        const newUser = await this.userRepository.findOne(user.id)
-        
+        const newUser = await this.userRepository.findOne(user.id,{relations:['studentDetails']})
+        console.log(newUser.studentDetails)
+        console.log(newUser.studentDetails.sujet)
         //check that subjects was created by administration 
         if (newUser.studentDetails.sujet){
             //check deadline
+            console.log('hayyyyyyyyyy')
             const deadline = newUser.studentDetails.sujet.dateLimiteDepot
             if (deadline<new Date())
                 throw new NotAcceptableException(`Date dépot de votre rapport : ${deadline} est dépassé !`)

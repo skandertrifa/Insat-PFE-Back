@@ -37,6 +37,7 @@ export class SujetService {
     }
 
     async findAll(): Promise<SujetEntity[]> {
+        console.log('hello')
         const sujets=await this.sujetRepositroy.find();
         return sujets
       }
@@ -45,9 +46,11 @@ export class SujetService {
         if(page<=0)
           page=1
         const limit=10
-        const sujets=await this.sujetRepositroy.find({relations:['etudiant'],skip:limit*(page-1),take:limit })
-
-
+        //const sujets=await this.sujetRepositroy.find({skip:limit*(page-1),take:limit })
+        const sujets=await this.sujetRepositroy.createQueryBuilder('sujet')
+        .leftJoinAndSelect("sujet.etudiant", "etudiant")
+        .leftJoinAndSelect("sujet.rapportPfe", "rapportPfe")
+        .getMany();
 
         const paginationMeta= {
           "currentPage": page,

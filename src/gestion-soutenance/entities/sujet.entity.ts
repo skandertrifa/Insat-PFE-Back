@@ -21,12 +21,11 @@ export class SujetEntity extends TimeStamp{
     @Column()
     description: string;
 
-    @OneToOne(()=>RapportPfeEntity,{cascade:true,eager:true})
+    @OneToOne(()=>RapportPfeEntity,{cascade:true})
     @JoinColumn()
     rapportPfe:RapportPfeEntity
 
-    @OneToOne(()=>StudentEntity,{cascade:true,eager:true})
-    @JoinColumn()
+    @OneToOne(()=>StudentEntity,etudiant=>etudiant.sujet)
     etudiant:StudentEntity
 
 }

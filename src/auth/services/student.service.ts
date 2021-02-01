@@ -81,7 +81,7 @@ export class StudentService {
         //     ],
 
         // });
-        const students=await this.studentRepository
+        /* const students=await this.studentRepository
         .createQueryBuilder('student')
         .select([
             'student.id',
@@ -95,7 +95,8 @@ export class StudentService {
             'userDetails.prenom',
         ])
         .leftJoin('student.userDetails', 'userDetails')  // userDetails is the joined table
-        .getMany();
+        .getMany(); */
+        const students = await this.studentRepository.find()
         return students
       }
 
@@ -143,7 +144,16 @@ export class StudentService {
       }
     
     
-      async delete(id: number): Promise<UpdateResult> {
-        return await this.studentRepository.softDelete(id);
-      }
+      async delete(id: number): Promise<StudentEntity> {
+        //return await this.studentRepository.softDelete(id);
+         try{
+        const student = await this.studentRepository.findOne(id,{relations:['userDetails']})
+        console.log(student)
+        return await this.studentRepository.softRemove(student);
+
+      }catch(e){
+        throw new NotFoundException('Impossible de supprimer cet etudiant')
+      } 
+}
+
 }

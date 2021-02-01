@@ -42,7 +42,7 @@ export class UserEntity extends TimeStamp{
     })
     role: string
 
-    @OneToOne(()=>StudentEntity,student=>student.userDetails,{cascade:true,onDelete:'CASCADE',onUpdate:'CASCADE'})
+    @OneToOne(()=>StudentEntity,student=>student.userDetails,{cascade:['soft-remove','recover','insert','update','remove'],onDelete:'CASCADE',onUpdate:'CASCADE'})
     @JoinColumn()
     studentDetails : StudentEntity
 
