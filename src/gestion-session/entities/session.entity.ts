@@ -6,7 +6,7 @@ import { PrimaryGeneratedColumn } from 'typeorm';
 import { Entity } from 'typeorm';
 
 
-@Entity('Session')
+@Entity('session')
 export class SessionEntity extends TimeStamp{
     @PrimaryGeneratedColumn()
     id: number;

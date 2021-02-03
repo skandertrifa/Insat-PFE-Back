@@ -8,6 +8,7 @@ import { GestionSessionModule } from './gestion-session/gestion_session.module';
 import { GestionSoutenanceModule } from './gestion-soutenance/gestion_soutenance.module';
 import * as dotenv from 'dotenv';
 import { MulterModule } from '@nestjs/platform-express';
+import { join } from 'path';
 dotenv.config();
 
 @Module({
@@ -28,7 +29,7 @@ dotenv.config();
           "dist/**/*.entity{.ts,.js}"
         ],
         // Ken el marra loula hotouha true w baaed false sinon tjikom mochkla kif t startiw
-        synchronize: false,
+        synchronize: true,
         }
     ),
     AuthModule,
