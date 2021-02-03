@@ -1,16 +1,18 @@
 import { CreateStudentDto } from './../dto/create-student';
 import { StudentService } from '../services/student.service';
 import { studentsFileMetadata } from '../utils/studentsFileMetadata.class';
-import { 
-     BadRequestException, Body,
-      Controller, Delete, Get, Param, ParseIntPipe, Post,
-      Query,
-       Req, UploadedFile, UseInterceptors } from '@nestjs/common';
+import {
+    BadRequestException, Body,
+    Controller, Delete, Get, Param, ParseIntPipe, Post, Put,
+    Query,
+    Req, UploadedFile, UseInterceptors
+} from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express'
 import { diskStorage } from 'multer';
 import { editFileNameStudents, studentsFileFilter } from '../utils/file-uploads.utils';
 import { Pagination } from 'nestjs-typeorm-paginate';
 import { StudentEntity } from '../entities/student.entity';
+import {UpdateStudentDto} from "../dto/update-student";
 
 
 
@@ -80,6 +82,11 @@ export class StudentController {
       return this.studentService.delete(+id);
     }
 
-    
+    @Put(':id')
+    async update(
+        @Param('id') id: string,
+        @Body() updateStudentDto: UpdateStudentDto){
+        return await this.studentService.update(id,updateStudentDto);
+    }
     
 }
