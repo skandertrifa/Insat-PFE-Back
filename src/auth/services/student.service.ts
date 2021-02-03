@@ -45,9 +45,16 @@ export class StudentService {
             id : +id,
             ...updateStudentDto
         });
-        if (!student){
+        const user = await this.userRepository.preload({
+            id : +id,
+            ...updateStudentDto
+        });
+        console.log(user);
+        if (!student || !user ){
             new NotFoundException("l'étudiant d'id{$id} n'existe pas !");
         }
+        //await this.userRepository.save(student);
+        await this.userRepository.save(user);
         return await this.studentRepository.save(student);
     }
 
