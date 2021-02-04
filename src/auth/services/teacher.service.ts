@@ -7,6 +7,14 @@ import { changeKeys, prepareTeacher} from '../utils/prepare-users.utils';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from '../entities/user.entity';
 import { Repository, UpdateResult } from 'typeorm';
+import {StudentEntity} from "../entities/student.entity";
+import {
+    paginate,
+    Pagination,
+    IPaginationOptions,
+} from 'nestjs-typeorm-paginate';
+import { CreateStudentDto } from '../dto/create-student';
+import {UpdateStudentDto} from "../dto/update-student";
 
 @Injectable()
 export class TeacherService {
@@ -102,4 +110,19 @@ export class TeacherService {
       async delete(id: number): Promise<UpdateResult> {
         return await this.teacherRepository.softDelete(id);
       }
+
+    async paginate(options: IPaginationOptions): Promise<Pagination<TeacherEntity>> {
+        const queryBuilder = this.teacherRepository
+            .createQueryBuilder('teacher')
+            .select([
+                'teacher.id',
+                'userDetails.id',
+                'userDetails.email',
+                'userDetails.nom',
+                'userDetails.prenom',
+            ])
+            .leftJoin('teacher.userDetails', 'userDetails')
+
+        return paginate<TeacherEntity>(queryBuilder, options);
+    }
 }
