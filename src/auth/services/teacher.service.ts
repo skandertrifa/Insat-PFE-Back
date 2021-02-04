@@ -1,3 +1,4 @@
+import { UpdateTeacherDto } from './../dto/update-teacher';
 import { CreateTeacherDto } from './../dto/create-teacher';
 import { TeacherEntity } from 'src/auth/entities/teacher.entity';
 import { teachersFileMetadata } from '../utils/teachersFileMetadata.class';
@@ -37,6 +38,24 @@ export class TeacherService {
           throw new BadRequestException("Request not accepted")
         }
       }
+
+      async update(id: string,updateTeacherDto:UpdateTeacherDto ): Promise<Partial<UserEntity>> {
+        const teacher = await this.teacherRepository.preload({
+            id : +id,
+            ...updateTeacherDto
+        });
+        const user = await this.userRepository.preload({
+            id : +id,
+            ...updateTeacherDto
+        });
+        console.log(user);
+        if (!teacher || !user ){
+            new NotFoundException("l'enseignant d'id{$id} n'existe pas !");
+        }
+        //await this.userRepository.save(teacher);
+        await this.userRepository.save(user);
+        return await this.teacherRepository.save(teacher);
+    }
     
 
     async generateTeachers(metadata:teachersFileMetadata,filePath){

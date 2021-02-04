@@ -1,19 +1,8 @@
+import { UpdateTeacherDto } from './../dto/update-teacher';
 import { CreateTeacherDto } from './../dto/create-teacher';
 import { teachersFileMetadata } from '../utils/teachersFileMetadata.class';
 import { TeacherService } from '../services/teacher.service';
-import {
-    BadRequestException,
-    Body,
-    Controller,
-    Delete,
-    Get,
-    Param, ParseIntPipe,
-    Post,
-    Query,
-    Req,
-    UploadedFile,
-    UseInterceptors
-} from '@nestjs/common';
+import { BadRequestException, Body, Controller, Delete, Get, Param, Post, Req, UploadedFile, UseInterceptors, Put, Query, ParseIntPipe } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express'
 import { diskStorage } from 'multer';
 import { editFileNameTeachers, teachersFileFilter } from '../utils/file-uploads.utils';
@@ -48,6 +37,12 @@ export class TeacherController {
 
     // get paginated
 
+    @Put(':id')
+    async update(
+        @Param('id') id: string,
+        @Body() updateStudentDto: UpdateTeacherDto){
+        return await this.teacherService.update(id,updateStudentDto);
+    }
 
     //upload excel file of teachers and geenrate them in db
     //TODO: add guards (Admin only)
