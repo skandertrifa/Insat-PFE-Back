@@ -3,7 +3,7 @@ import { Column } from 'typeorm';
 import { PrimaryGeneratedColumn } from 'typeorm';
 import { Entity } from 'typeorm';
 
-@Entity('RapportPfe')
+@Entity('rapportpfe')
 export class RapportPfeEntity extends TimeStamp{
     @PrimaryGeneratedColumn()
     id: number;

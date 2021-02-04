@@ -10,6 +10,8 @@ export class CreateSoutenanceDto {
 
     sujetId:number;
 
+    start: Date;
+
 
 
 }

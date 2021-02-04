@@ -1,10 +1,10 @@
 import { CreateTeacherDto } from './../dto/create-teacher';
-import { teachersFileMetadata } from '../../gestion-soutenance/utils/teachersFileMetadata.class';
+import { teachersFileMetadata } from '../utils/teachersFileMetadata.class';
 import { TeacherService } from '../services/teacher.service';
 import { BadRequestException, Body, Controller, Delete, Get, Param, Post, Req, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express'
 import { diskStorage } from 'multer';
-import { editFileNameTeachers, teachersFileFilter } from '../../gestion-soutenance/utils/file-uploads.utils';
+import { editFileNameTeachers, teachersFileFilter } from '../utils/file-uploads.utils';
 
 @Controller('teacher')
 export class TeacherController {

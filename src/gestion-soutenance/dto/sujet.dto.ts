@@ -6,8 +6,13 @@ export class SujetDto {
     titre: string;
 
     @IsNotEmpty()
+    @Transform((x)=>new Date(x))
+    @MinDate(new Date())
+    dateLimiteDepot: Date;
+
+    @IsNotEmpty()
     description: string;
 
     @IsNotEmpty()
-    idEncadrant: number
+    idEtudiant: number
 }

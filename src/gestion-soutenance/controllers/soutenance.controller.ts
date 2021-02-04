@@ -7,6 +7,11 @@ import { UpdateSoutenanceDto } from '../dto/update-soutenance.dto';
 export class SoutenanceController {
   constructor(private readonly soutenanceService: SoutenanceService) {}
 
+  @Get('event')
+  findAllEvents() {
+    return this.soutenanceService.findAll();
+  }
+
   @Post()
   create(@Body() createSoutenanceDto: CreateSoutenanceDto) {
     return this.soutenanceService.create(createSoutenanceDto);

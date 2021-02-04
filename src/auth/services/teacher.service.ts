@@ -1,9 +1,9 @@
 import { CreateTeacherDto } from './../dto/create-teacher';
 import { TeacherEntity } from 'src/auth/entities/teacher.entity';
-import { teachersFileMetadata } from '../../gestion-soutenance/utils/teachersFileMetadata.class';
+import { teachersFileMetadata } from '../utils/teachersFileMetadata.class';
 import { BadRequestException, ConflictException, Injectable, NotAcceptableException, NotFoundException } from '@nestjs/common';
 import * as xlsx from 'xlsx';
-import { changeKeys, prepareTeacher} from '../../gestion-soutenance/utils/prepare-users.utils';
+import { changeKeys, prepareTeacher} from '../utils/prepare-users.utils';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from '../entities/user.entity';
 import { Repository, UpdateResult } from 'typeorm';
