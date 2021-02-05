@@ -50,6 +50,7 @@ export class SoutenanceService {
     const objects=await this.getRelationEntities(createSoutenanceDto)
     //console.log("objects : ",objects)
     const soutenance =  await this.soutenanceRepository.create({...createSoutenanceDto,...objects});
+    soutenance.start = soutenance.dateDePassage;
     //console.log("soutenance creation : ",soutenance)
     return await this.soutenanceRepository.save(soutenance);
     
@@ -83,6 +84,7 @@ export class SoutenanceService {
   async findAll(): Promise<SoutenanceEntity[]> {
     const Soutenances=await this.soutenanceRepository.find({ relations: relations})
     for (const soutenance of Soutenances){
+      soutenance.start = soutenance.dateDePassage;
       soutenance.session = await this.sessionService.findOne(soutenance.session.id);
       soutenance.jury = await this.juryService.findOne(soutenance.jury.id);
     }

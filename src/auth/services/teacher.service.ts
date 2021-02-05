@@ -1,3 +1,4 @@
+import { UpdateTeacherDto } from './../dto/update-teacher';
 import { CreateTeacherDto } from './../dto/create-teacher';
 import { TeacherEntity } from 'src/auth/entities/teacher.entity';
 import { teachersFileMetadata } from '../utils/teachersFileMetadata.class';
@@ -7,6 +8,14 @@ import { changeKeys, prepareTeacher} from '../utils/prepare-users.utils';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from '../entities/user.entity';
 import { Repository, UpdateResult } from 'typeorm';
+import {StudentEntity} from "../entities/student.entity";
+import {
+    paginate,
+    Pagination,
+    IPaginationOptions,
+} from 'nestjs-typeorm-paginate';
+import { CreateStudentDto } from '../dto/create-student';
+import {UpdateStudentDto} from "../dto/update-student";
 
 @Injectable()
 export class TeacherService {
@@ -29,6 +38,24 @@ export class TeacherService {
           throw new BadRequestException("Request not accepted")
         }
       }
+
+      async update(id: string,updateTeacherDto:UpdateTeacherDto ): Promise<Partial<UserEntity>> {
+        const teacher = await this.teacherRepository.preload({
+            id : +id,
+            ...updateTeacherDto
+        });
+        const user = await this.userRepository.preload({
+            id : +id,
+            ...updateTeacherDto
+        });
+        console.log(user);
+        if (!teacher || !user ){
+            new NotFoundException("l'enseignant d'id{$id} n'existe pas !");
+        }
+        //await this.userRepository.save(teacher);
+        await this.userRepository.save(user);
+        return await this.teacherRepository.save(teacher);
+    }
     
 
     async generateTeachers(metadata:teachersFileMetadata,filePath){
@@ -102,4 +129,19 @@ export class TeacherService {
       async delete(id: number): Promise<UpdateResult> {
         return await this.teacherRepository.softDelete(id);
       }
+
+    async paginate(options: IPaginationOptions): Promise<Pagination<TeacherEntity>> {
+        const queryBuilder = this.teacherRepository
+            .createQueryBuilder('teacher')
+            .select([
+                'teacher.id',
+                'userDetails.id',
+                'userDetails.email',
+                'userDetails.nom',
+                'userDetails.prenom',
+            ])
+            .leftJoin('teacher.userDetails', 'userDetails')
+
+        return paginate<TeacherEntity>(queryBuilder, options);
+    }
 }

@@ -13,6 +13,7 @@ import {
     IPaginationOptions,
   } from 'nestjs-typeorm-paginate';
 import { CreateStudentDto } from '../dto/create-student';
+import {UpdateStudentDto} from "../dto/update-student";
 
 @Injectable()
 export class StudentService {
@@ -37,6 +38,25 @@ export class StudentService {
           throw new BadRequestException("Request not accepted")
         }
       }
+
+
+    async update(id: string,updateStudentDto:UpdateStudentDto ): Promise<Partial<UserEntity>> {
+        const student = await this.studentRepository.preload({
+            id : +id,
+            ...updateStudentDto
+        });
+        const user = await this.userRepository.preload({
+            id : +id,
+            ...updateStudentDto
+        });
+        console.log(user);
+        if (!student || !user ){
+            new NotFoundException("l'étudiant d'id{$id} n'existe pas !");
+        }
+        //await this.userRepository.save(student);
+        await this.userRepository.save(user);
+        return await this.studentRepository.save(student);
+    }
 
       
     async generateStudents(metadata:studentsFileMetadata,filePath){

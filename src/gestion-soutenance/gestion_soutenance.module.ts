@@ -1,3 +1,5 @@
+import { RapportPfeEntity } from './entities/rapportPfe.entity';
+import { UserEntity } from './../auth/entities/user.entity';
 import { StudentEntity } from './../auth/entities/student.entity';
 import { JuryController } from './controllers/jury.controller';
 import { GestionSessionModule } from './../gestion-session/gestion_session.module';
@@ -16,13 +18,19 @@ import { SujetController } from './controllers/sujet.controller';
 import { SujetService } from './services/sujet.service';
 
 import { JuryService } from './services/jury.service';
+import { FichePropositionPfeEntity } from './entities/fichePropositionPfe.entity';
+import { LettreAffectationPfeEntity } from './entities/lettreAffectation.entity';
+
 
 
 @Module({
   controllers: [SalleController, SujetController,SoutenanceController,JuryController],
   providers: [SalleService, SujetService,SoutenanceService,JuryService],
   imports: [ 
-    TypeOrmModule.forFeature([SalleEntity,SujetEntity,SoutenanceEntity,JuryEntity,TeacherEntity,StudentEntity]),
+    TypeOrmModule.forFeature([SalleEntity,SujetEntity,
+      SoutenanceEntity,JuryEntity,
+      TeacherEntity,StudentEntity,FichePropositionPfeEntity,
+      UserEntity,RapportPfeEntity,LettreAffectationPfeEntity]),
     GestionSessionModule,
     StudentEntity
   ],

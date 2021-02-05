@@ -8,6 +8,7 @@ import { GestionSessionModule } from './gestion-session/gestion_session.module';
 import { GestionSoutenanceModule } from './gestion-soutenance/gestion_soutenance.module';
 import * as dotenv from 'dotenv';
 import { MulterModule } from '@nestjs/platform-express';
+import { join } from 'path';
 dotenv.config();
 
 @Module({

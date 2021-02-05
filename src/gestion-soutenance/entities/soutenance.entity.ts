@@ -1,3 +1,4 @@
+import { Transform } from 'class-transformer';
 import { JoinColumn, OneToOne } from 'typeorm';
 
 
@@ -11,7 +12,7 @@ import { SalleEntity } from './salle.entity';
 import { SujetEntity } from './sujet.entity';
 import { JuryEntity } from './jury.entity';
 
-@Entity('Soutenance')
+@Entity('soutenance')
 export class SoutenanceEntity extends TimeStamp{
     @PrimaryGeneratedColumn()
     id: number;
@@ -19,11 +20,18 @@ export class SoutenanceEntity extends TimeStamp{
     @Column()
     titre: string;
 
+    @Transform(x => new Date(x))
     @Column({
-        type:"date"
+        type:"datetime"
     })
     dateDePassage: Date;
 
+    @Transform(x => new Date(x))
+    @Column({
+        nullable: true,
+        type: "datetime"
+    })
+    start: Date;
     
     @ManyToOne(() => SessionEntity,(session : SessionEntity) => session.soutenances,
     { nullable: true, onUpdate: 'CASCADE', })

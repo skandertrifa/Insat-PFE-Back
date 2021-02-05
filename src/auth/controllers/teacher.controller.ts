@@ -1,10 +1,13 @@
+import { UpdateTeacherDto } from './../dto/update-teacher';
 import { CreateTeacherDto } from './../dto/create-teacher';
 import { teachersFileMetadata } from '../utils/teachersFileMetadata.class';
 import { TeacherService } from '../services/teacher.service';
-import { BadRequestException, Body, Controller, Delete, Get, Param, Post, Req, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Delete, Get, Param, Post, Req, UploadedFile, UseInterceptors, Put, Query, ParseIntPipe } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express'
 import { diskStorage } from 'multer';
 import { editFileNameTeachers, teachersFileFilter } from '../utils/file-uploads.utils';
+import {Pagination} from "nestjs-typeorm-paginate";
+import {TeacherEntity} from "../entities/teacher.entity";
 
 @Controller('teacher')
 export class TeacherController {
@@ -13,10 +16,32 @@ export class TeacherController {
     constructor(
         private teacherService: TeacherService
     ){}
+    @Get('paginate')
+    async index(
+        @Query('page', ParseIntPipe) page = 1,
+        @Query('limit', ParseIntPipe) limit = 10,
+    ): Promise<Pagination<TeacherEntity>> {
+        console.log("i'm here");
+        limit = limit > 100 ? 100 : limit;
+        return this.teacherService.paginate({
+            page,
+            limit,
+            route: 'http://localhost:4200/Teacher',
+        });
+    }
 
     @Post()
     createTeacher(@Body() createTeacherDto:CreateTeacherDto ){
       return this.teacherService.create(createTeacherDto);
+    }
+
+    // get paginated
+
+    @Put(':id')
+    async update(
+        @Param('id') id: string,
+        @Body() updateStudentDto: UpdateTeacherDto){
+        return await this.teacherService.update(id,updateStudentDto);
     }
 
     //upload excel file of teachers and geenrate them in db

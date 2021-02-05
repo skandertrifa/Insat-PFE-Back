@@ -4,7 +4,7 @@ import { PrimaryGeneratedColumn } from 'typeorm';
 import { Entity } from 'typeorm';
 import { SoutenanceEntity } from './soutenance.entity';
 
-@Entity('Salle')
+@Entity('salle')
 export class SalleEntity extends TimeStamp{
     @PrimaryGeneratedColumn()
     id: number;

@@ -3,8 +3,8 @@ import { Column } from 'typeorm';
 import { PrimaryGeneratedColumn } from 'typeorm';
 import { Entity } from 'typeorm';
 
-@Entity('rapportpfe')
-export class RapportPfeEntity extends TimeStamp{
+@Entity('LettreAffectationPfe')
+export class LettreAffectationPfeEntity extends TimeStamp{
     @PrimaryGeneratedColumn()
     id: number;
     @Column({unique:true})
