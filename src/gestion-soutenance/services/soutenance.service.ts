@@ -58,14 +58,17 @@ export class SoutenanceService {
     return this.soutenanceRepository.count()
   }
 
-  async findAllPaginated(page:number): Promise<any> {
+  async findAllPaginated(page:number,limit:number): Promise<any> {
     if(page<=0)
       page=1
-    const limit=10
+    
     const soutenances=await this.soutenanceRepository.find({ relations: relations,skip:limit*(page-1),take:limit })
     for (const soutenance of soutenances){
-      soutenance.session = await this.sessionService.findOne(soutenance.session.id);
-      soutenance.jury = await this.juryService.findOne(soutenance.jury.id);
+      if(typeof soutenance.session != null && typeof soutenance.session != undefined )
+        soutenance.session = await this.sessionService.findOne(soutenance.session.id);
+      
+      if(typeof soutenance.jury != null && typeof soutenance.jury != undefined )
+        soutenance.jury = await this.juryService.findOne(soutenance.jury.id);
     }
 
     const paginationMeta= {

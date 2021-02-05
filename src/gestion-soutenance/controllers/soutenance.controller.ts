@@ -13,8 +13,8 @@ export class SoutenanceController {
   }
 
   @Get()
-  async findAll(@Query('page', ParseIntPipe) page = 1) {
-    return this.soutenanceService.findAllPaginated(page);
+  async findAll(@Query('page', ParseIntPipe) page = 1,@Query('limit', ParseIntPipe) limit=10) {
+    return this.soutenanceService.findAllPaginated(page,limit);
     
   }
 
