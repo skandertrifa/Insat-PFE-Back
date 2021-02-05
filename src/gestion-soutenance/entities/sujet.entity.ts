@@ -1,10 +1,13 @@
 import { StudentEntity } from './../../auth/entities/student.entity';
-import { IsDate } from 'class-validator';
+import { IsDate, IsOptional } from 'class-validator';
 import { TimeStamp } from 'src/generics/timestamp';
-import { Column, JoinColumn, OneToOne } from 'typeorm';
+import { Column, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
 import { PrimaryGeneratedColumn } from 'typeorm';
 import { Entity } from 'typeorm';
 import { RapportPfeEntity } from './rapportPfe.entity';
+import { TeacherEntity } from 'src/auth/entities/teacher.entity';
+import { FichePropositionPfeEntity } from './fichePropositionPfe.entity';
+import { LettreAffectationPfeEntity } from './lettreAffectation.entity';
 
 @Entity('sujet')
 export class SujetEntity extends TimeStamp{

@@ -1,6 +1,12 @@
 import { SujetService } from '../services/sujet.service';
 import { SujetDto } from '../dto/sujet.dto';
-import { Body, Controller, Get, Post, Put,Delete, Param, ParseIntPipe, Query} from '@nestjs/common';
+import { Body, Controller, Get, Post, Put,Delete, Param, ParseIntPipe, Query, BadRequestException, Header, Req, UploadedFile, UseGuards, UseInterceptors} from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { editFileNameRapporPfe, rapportPfeFileFilter } from 'src/auth/utils/file-uploads.utils';
+import { editFichePropositionpfe, fichePropositionPfeFileFilter } from '../utils/file-uploads.utils';
+import { diskStorage } from 'multer';
+import { SujetDtoUpdate } from '../dto/sujet.dto-updat';
 
 
 @Controller('sujet')
@@ -51,7 +57,7 @@ export class SujetController {
     @Put(':id')
     updateOne(
         @Param('id') id:string,
-        @Body() sujet:SujetDto
+        @Body() sujet:SujetDtoUpdate
     ){
         return this.sujetService.update(+id,sujet);
 

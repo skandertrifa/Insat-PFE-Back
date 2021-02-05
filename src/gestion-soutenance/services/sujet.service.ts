@@ -1,9 +1,16 @@
 import { SujetDto } from '../dto/sujet.dto';
 import { SujetEntity } from '../entities/sujet.entity';
-import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, NotAcceptableException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, UpdateResult } from 'typeorm';
 import { StudentEntity } from 'src/auth/entities/student.entity';
+import { TeacherEntity } from 'src/auth/entities/teacher.entity';
+import { UserEntity } from 'src/auth/entities/user.entity';
+import { SujetDtoUpdate } from '../dto/sujet.dto-updat';
+import { FichePropositionPfeEntity } from '../entities/fichePropositionPfe.entity';
+import { LettreAffectationPfeEntity } from '../entities/lettreAffectation.entity';
+import { RapportPfeEntity } from '../entities/rapportPfe.entity';
+import * as fs from "fs";
 
 @Injectable()
 export class SujetService {
