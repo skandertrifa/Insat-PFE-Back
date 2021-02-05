@@ -14,9 +14,14 @@ export class SujetEntity extends TimeStamp{
     @Column({unique:true})
     titre: string;
 
-    @Column()
+    @Column({default:null,nullable:true})
     @IsDate()
+    @IsOptional()
     dateLimiteDepot: Date;
+
+    @Column({default:false})
+    approved: boolean;
+
 
     @Column()
     description: string;
@@ -27,5 +32,16 @@ export class SujetEntity extends TimeStamp{
 
     @OneToOne(()=>StudentEntity,etudiant=>etudiant.sujet)
     etudiant:StudentEntity
+
+    @OneToOne(()=>FichePropositionPfeEntity,{cascade:true})
+    @JoinColumn()
+    fichePropositionPfe:FichePropositionPfeEntity
+
+    @OneToOne(()=>LettreAffectationPfeEntity,{cascade:true})
+    @JoinColumn()
+    lettreAffectationPfe:LettreAffectationPfeEntity
+
+    @ManyToOne(()=>TeacherEntity,teacher=>teacher.sujetsEncadres)
+    encadrant:TeacherEntity
 
 }
