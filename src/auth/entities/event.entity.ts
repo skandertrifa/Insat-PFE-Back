@@ -10,7 +10,7 @@ export enum Filiere{
     CH = "CH",
     BIO = "BIO"}
 
-@Entity('student-details')
+@Entity('event')
 export class EventEntity {
 
     @PrimaryGeneratedColumn()
