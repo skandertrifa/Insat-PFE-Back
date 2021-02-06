@@ -89,8 +89,10 @@ export class SujetController {
 		@Param('id') id: string,
 		@Req() req,
 	): Promise<Buffer> {
+        console.log(id)
 		const pdf = await this.sujetService.downloadFile(+id,'lettre');
-		return pdf;
+        
+        return pdf;
     }
     
     //download rapport
@@ -132,7 +134,7 @@ export class SujetController {
     
 
     //Lettre affirmation upload
-    @UseGuards(AuthGuard('jwt'))
+    //@UseGuards(AuthGuard('jwt'))
     @Post('upload/lettreAffirmation/:id')
     @UseInterceptors(FileInterceptor("lettreAffirmation",{
     storage: diskStorage({

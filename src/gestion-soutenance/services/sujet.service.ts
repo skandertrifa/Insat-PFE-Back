@@ -143,9 +143,9 @@ export class SujetService {
  async downloadFile(id: number,kind:string): Promise<Buffer> {
     let file = null
     if(kind == 'rapport'){
-        file = await this.fichePropositionPfeRepository.findOne({id});
+        file = await this.rapportPfeRepository.findOne({id});
     }else if (kind == 'lettre'){
-        file = await this.fichePropositionPfeRepository.findOne({id});
+        file = await this.lettreAffecationPfeRepository.findOne({id});
     }else if (kind =='ficheprop') {
         file = await this.fichePropositionPfeRepository.findOne({id});
 
