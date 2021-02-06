@@ -34,34 +34,38 @@ export class SujetService {
     async length():Promise<number>{
         return this.sujetRepositroy.count()
       }
-      async create(sujetDto:SujetDto,
+
+    async create(sujetDto:SujetDto,
         user:UserEntity,
         filepath:string){
 
-try{
-    
-    const newUser = await this.userRepository.findOne(user.id,{relations:['studentDetails']})
-    const etudiant = await this.etudiantRepository.findOne(newUser.studentDetails.id)
-    //if user already have subject ? don'create one
-    if (etudiant.sujet){
-        throw new Error('Vous avez deja un sujet')
+    try{
+        
+        const newUser = await this.userRepository.findOne(user.id,{relations:['studentDetails']})
+        const etudiant = await this.etudiantRepository.findOne(newUser.studentDetails.id)
+        //if user already have subject ? don'create one
+        if (etudiant.sujet){
+            throw new Error('Vous avez deja un sujet')
+        }
+        const ficheProp = await this.fichePropositionPfeRepository.create({path:filepath})
+        const encadrant = await this.enseignantRepository.findOne(sujetDto.idEncadrant)
+        if (!encadrant){
+            throw new Error("idEncadrant Required ")
+        }
+        const sujet = await this.sujetRepositroy.create({
+            etudiant:etudiant,
+            fichePropositionPfe:ficheProp,
+            description:sujetDto.description,
+            titre:sujetDto.titre,
+            encadrant:encadrant,
+        });
+        return await this.sujetRepositroy.save(sujet);
     }
-    const ficheProp = await this.fichePropositionPfeRepository.create({path:filepath})
-    const encadrant = await this.enseignantRepository.findOne(sujetDto.idEncadrant)
-    const sujet = await this.sujetRepositroy.create({
-        etudiant:etudiant,
-        fichePropositionPfe:ficheProp,
-        description:sujetDto.description,
-        titre:sujetDto.titre,
-        encadrant:encadrant,
-    });
-    return await this.sujetRepositroy.save(sujet);
-}
-catch(e){
-    if(e.errno==1062)
-        throw new ConflictException(`Un Sujet de meme titre existe dejà.`);
-    throw new ConflictException(e.message)
-}
+    catch(e){
+        if(e.errno==1062)
+            throw new ConflictException(`Un Sujet de meme titre existe dejà.`);
+        throw  new BadRequestException(e.message)
+    }
 
 }
 
@@ -118,6 +122,7 @@ catch(e){
             }
    
             async update(id:number,sujetDtoUpdate:SujetDtoUpdate):Promise<SujetEntity>{
+                console.log(id,sujetDtoUpdate)
                 const sujet =  await this.sujetRepositroy.preload(
                     {
                     id:+id,

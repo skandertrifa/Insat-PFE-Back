@@ -10,9 +10,6 @@ export class SujetDtoUpdate {
     @IsBoolean()
     approved:boolean;
 
-    @IsNotEmpty()
     titre: string;
-
-    @IsNotEmpty()
     description: string;
 }

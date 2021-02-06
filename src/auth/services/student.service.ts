@@ -65,6 +65,7 @@ export class StudentService {
         const sheet = xlsxFile.Sheets[xlsxFile.SheetNames[0]] 
         var data = xlsx.utils.sheet_to_json(sheet,{raw:true,defval:null})
         // check that data not empty 
+
         if (data.length>0){
             //check that keys match what was sent with the post request
             if (JSON.stringify(Object.keys(data[0])) == 
@@ -77,6 +78,7 @@ export class StudentService {
                 }
                 return await this.userRepository.save(users);
                 }catch(e){
+                  console.log(e)
                     throw new NotAcceptableException('Vérifier les entréss de votre fichier')
                 }
             }else{
