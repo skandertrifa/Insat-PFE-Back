@@ -63,23 +63,7 @@ export class SoutenanceService {
     return this.soutenanceRepository.count()
   }
 
-  async getCatalogue() : Promise<any[]>{
-    
-    const result = await this.soutenanceRepository
-        .query('SELECT soutenance.id as id,soutenance.titre as titre,session.name as session,\
-        sujet.titre as sujetTitre,sujet.description as sujetDescription,user.nom as nomEtudiant,user.prenom as prenomEtudiant,`student-details`.`filiere`,\
-        user1.nom as nomEncadrant, user1.prenom as prenomEncadrant\
-        FROM `soutenance`,`sujet`,`session`,`user`,`student-details`,`teacher-details` ,`user`as user1\
-        WHERE soutenance.sujetId=sujet.id AND\
-        soutenance.sessionId=session.id and sujet.encadrantId=`teacher-details`.id AND sujet.id=`student-details`.sujetId AND (`student-details`.id= 	user.studentDetailsId AND `teacher-details`.id = user1.teacherDetailsId)')
-    
-    return result
-    
-  }
-
-
   async findAllPaginated(page:number,limit:number): Promise<any> {
-    
     if(page<=0)
       page=1
     
@@ -138,14 +122,9 @@ export class SoutenanceService {
   async findOne(id: number): Promise<SoutenanceEntity> {
     const soutenance = await this.soutenanceRepository.findOne(id,{relations:relations});
     if (soutenance){
-      console.log('0')
       soutenance.session = await this.sessionService.findOne(soutenance.session.id);
-      console.log('1')
       soutenance.jury = await this.juryService.findOne(soutenance.jury.id);
-      console.log('2')
       soutenance.sujet = await this.sujetService.findOne(soutenance.sujet.id);
-      console.log('3')
-
       return soutenance
     }
 
@@ -172,5 +151,19 @@ export class SoutenanceService {
     return await this.soutenanceRepository.softDelete(id);
  
   }
-  
+
+
+  async getCatalogue() : Promise<any[]>{
+ 
+    const result = await this.soutenanceRepository
+    .query('SELECT soutenance.id as id,soutenance.titre as titre,session.name as session,\
+    sujet.titre as sujetTitre,sujet.description as sujetDescription,user.nom as nomEtudiant,user.prenom as prenomEtudiant,`student-details`.`filiere`,\
+    user1.nom as nomEncadrant, user1.prenom as prenomEncadrant\
+    FROM `soutenance`,`sujet`,`session`,`user`,`student-details`,`teacher-details` ,`user`as user1\
+    WHERE soutenance.sujetId=sujet.id AND\
+    soutenance.sessionId=session.id and sujet.encadrantId=`teacher-details`.id AND sujet.id=`student-details`.sujetId AND (`student-details`.id= user.studentDetailsId AND `teacher-details`.id = user1.teacherDetailsId)')
+    
+    return result
+    
+    }
 }
