@@ -13,6 +13,11 @@ export class SoutenanceController {
     return this.soutenanceService.findAll();
   }
 
+  @Get('catalogue')
+  getCatalogue() {
+    return this.soutenanceService.getCatalogue();
+  }
+  
   @Post()
   create(@Body() createSoutenanceDto: CreateSoutenanceDto) {
     return this.soutenanceService.create(createSoutenanceDto);
@@ -41,4 +46,6 @@ export class SoutenanceController {
   delete(@Param('id') id: string) {
     return this.soutenanceService.delete(+id);
   }
+
+  
 }
