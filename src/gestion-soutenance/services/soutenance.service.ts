@@ -91,6 +91,31 @@ export class SoutenanceService {
     return Soutenances
   }
 
+  async findAllOfTeacher(idTeacher:number): Promise<SoutenanceEntity[]> {
+    const Soutenances=await this.soutenanceRepository.find({ relations: relations})
+    const teacherSoutenances = []
+    for (const soutenance of Soutenances){
+      soutenance.start = soutenance.dateDePassage;
+      soutenance.session = await this.sessionService.findOne(soutenance.session.id);
+      soutenance.jury = await this.juryService.findOne(soutenance.jury.id);
+      if (soutenance.jury.president.id === idTeacher)
+        { console.log('pres found')
+          teacherSoutenances.push(soutenance)
+        }
+      for(let i=0;i<soutenance.jury.members.length;i++){
+        if (soutenance.jury.members[i].id===idTeacher)
+          {teacherSoutenances.push(soutenance)
+            console.log('member found')
+          break}
+      }
+    }
+    return teacherSoutenances
+  }
+
+  /* async findOneOfStudent(): Promise<SoutenanceEntity> {
+    Chercher la soutenance qui a un etuidant d'id meme id 
+    } */
+
   async findOne(id: number): Promise<SoutenanceEntity> {
     const soutenance = await this.soutenanceRepository.findOne(id,{relations:relations});
     console.log("soutenance : ",soutenance)
