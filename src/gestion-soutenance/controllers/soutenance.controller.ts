@@ -33,7 +33,8 @@ export class SoutenanceController {
         return this.soutenanceService.findAllOfTeacher(+idUser);
     }
     if (req.user.role == 'user')
-      {//return this.soutenanceService.findOneOfStudent(idUser);
+      {
+        //return this.soutenanceService.findOneOfStudent(idUser);
     }
   }
 

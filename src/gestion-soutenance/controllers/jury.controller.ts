@@ -11,9 +11,9 @@ export class JuryController {
 
     @Post()
     create(
-        @Body() sujet:JuryDto
+        @Body() jury:JuryDto
     ){
-        return this.juryService.create(sujet);
+        return this.juryService.create(jury);
     }
 
     @Get()
@@ -26,6 +26,14 @@ export class JuryController {
         @Param('id') id:string
     ){
         return this.juryService.findOne(+id);
+    }
+
+    @Put(':id')
+    updateOne(
+        @Param('id') id:string,
+        @Body() juryUpdate : JuryDto
+    ){
+        return this.juryService.update(juryUpdate,+id);
     }
 
     @Delete(':id')
