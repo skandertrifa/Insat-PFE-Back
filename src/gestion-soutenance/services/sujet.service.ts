@@ -29,6 +29,8 @@ export class SujetService {
         private rapportPfeRepository : Repository<RapportPfeEntity>,
         @InjectRepository(LettreAffectationPfeEntity)
         private readonly lettreAffecationPfeRepository:Repository<LettreAffectationPfeEntity>,
+        @InjectRepository(TeacherEntity)
+        private teacherRepository : Repository<TeacherEntity>,
     ){}
 
     async length():Promise<number>{
@@ -91,7 +93,7 @@ export class SujetService {
         for(let i=0;i<sujets.length;i++){
             if (sujets[i].etudiant)
             sujets[i].etudiant = await this.etudiantRepository.findOne(sujets[i].etudiant.id);
-            if (sujets[i].etudiant)
+            if (sujets[i].encadrant)
             sujets[i].encadrant = await this.enseignantRepository.findOne(sujets[i].encadrant.id);
         }
         const paginationMeta= {
@@ -113,6 +115,7 @@ export class SujetService {
             .leftJoinAndSelect("sujet.encadrant", "encadrant")
             .where('sujet.id=:id',{id:id})
             .getOne();
+
             
             if (sujet){
             sujet.etudiant = await this.etudiantRepository.findOne(sujet.etudiant.id);
@@ -122,7 +125,6 @@ export class SujetService {
             }
    
             async update(id:number,sujetDtoUpdate:SujetDtoUpdate):Promise<SujetEntity>{
-                console.log(id,sujetDtoUpdate)
                 const sujet =  await this.sujetRepositroy.preload(
                     {
                     id:+id,
@@ -136,6 +138,103 @@ export class SujetService {
                   return this.findOne(id)
         
             }
+
+    /* async findOneOfStudent(idStudent:number):Promise<SujetEntity>{
+        
+        const etudiant = await this.etudiantRepository.findOne(idStudent);
+        if (etudiant.sujet){
+            const sujetId = etudiant.sujet.id;
+            const sujet=await this.sujetRepositroy.createQueryBuilder('sujet')
+            .leftJoinAndSelect("sujet.etudiant", "etudiant")
+            .leftJoinAndSelect("sujet.rapportPfe", "rapportPfe")
+            .leftJoinAndSelect("sujet.fichePropositionPfe", "fichePropositionPfe")
+            .leftJoinAndSelect("sujet.lettreAffectationPfe", "lettreAffectationPfe")
+            .leftJoinAndSelect("sujet.encadrant", "encadrant")
+            .where('sujet.id=:id',{id:sujetId})
+            .getOne();
+            
+            if (sujet){
+            sujet.etudiant = await this.etudiantRepository.findOne(sujet.etudiant.id);
+            sujet.encadrant = await this.enseignantRepository.findOne(sujet.encadrant.id);
+            }
+            return sujet
+            
+        }else{
+            throw new NotFoundException(`L'etudiant d'id ${idStudent} n'a pas de sujet`);
+        }
+
+    } */
+
+    async findOneOfStudent(idStudent:number):Promise<SujetEntity[]>{
+        const studentSujet = await this.userRepository.query(
+            'SELECT \
+            sujet.titre as titreSujet , sujet.description as sujetDescription, \
+            sujet.dateLimiteDepot as SujetdateLimiteDepot,\
+            user1.nom as nomEncadrant ,user1.prenom as prenomEncadrant , user1.email as emailEncadrant, \
+            user.nom as nomEtudiant , user.prenom as prenomEtudiant, user.email as emailEtudiant,\
+            session.name as nomSession,\
+            salle.code as codeSalle,\
+            soutenance.titre as titreSoutenance,\
+            soutenance.dateDePassage,\
+            presidentUser.nom as nomPresidentJury , presidentUser.prenom as prenomPresidentJury , presidentUser.email as emailPresidentJury,\
+            member1User.nom as nomMember1Jury , member1User.prenom as prenomMember1Jury , member1User.email as emailMember1Jury,\
+            member2User.nom as nomMember2Jury , member2User.prenom as prenomMember2Jury , member2User.email as emailMember2Jury\
+            FROM \
+            `soutenance`,`sujet`,`session`,`user`,`student-details`,`teacher-details` , salle ,jury , `jury_members_teacher-details` as member1,\
+            `jury_members_teacher-details` as member2,\
+            `user`as user1,\
+            `user`as presidentUser, `teacher-details` as president,\
+            `user`as member1User, `teacher-details` as member1Details,\
+            `user`as member2User, `teacher-details` as member2Details\
+            WHERE soutenance.sujetId=sujet.id AND soutenance.salleId=salle.id AND soutenance.sessionId=session.id and sujet.encadrantId=`teacher-details`.id AND sujet.id=`student-details`.sujetId AND (`student-details`.id= user.studentDetailsId AND `teacher-details`.id = user1.teacherDetailsId) \
+            AND presidentUser.teacherDetailsId=president.id AND president.id=jury.presidentId\
+            AND member1User.teacherDetailsId=member1Details.id AND member1Details.id=member1.teacherDetailsId\
+            AND member2User.teacherDetailsId=member2Details.id AND member2Details.id=member2.teacherDetailsId\
+            AND soutenance.juryId=jury.id and jury.id=member1.juryId and jury.id=member2.juryId and member1.teacherDetailsId>member2.teacherDetailsId'
+            +
+            ' And `student-details`.id='+`${idStudent}`  
+        )
+
+        return studentSujet 
+    }
+    async findAllOfTeacher(idTeacher:number): Promise<SujetEntity[]> {
+        const teacherSujets = await this.teacherRepository.query(
+            'SELECT \
+            sujet.titre as titreSujet , sujet.description as sujetDescription, \
+            sujet.dateLimiteDepot as SujetdateLimiteDepot,\
+            user1.nom as nomEncadrant ,user1.prenom as prenomEncadrant , user1.email as emailEncadrant, \
+            user.nom as nomEtudiant , user.prenom as prenomEtudiant, user.email as emailEtudiant,\
+            session.name as nomSession,\
+            salle.code as codeSalle,\
+            soutenance.titre as titreSoutenance,\
+            soutenance.dateDePassage,\
+            presidentUser.nom as nomPresidentJury , presidentUser.prenom as prenomPresidentJury , presidentUser.email as emailPresidentJury,\
+            member1User.nom as nomMember1Jury , member1User.prenom as prenomMember1Jury , member1User.email as emailMember1Jury,\
+            member2User.nom as nomMember2Jury , member2User.prenom as prenomMember2Jury , member2User.email as emailMember2Jury\
+            FROM \
+            `soutenance`,`sujet`,`session`,`user`,`student-details`,`teacher-details` , salle ,jury , `jury_members_teacher-details` as member1,\
+            `jury_members_teacher-details` as member2,\
+            `user`as user1,\
+            `user`as presidentUser, `teacher-details` as president,\
+            `user`as member1User, `teacher-details` as member1Details,\
+            `user`as member2User, `teacher-details` as member2Details\
+            WHERE soutenance.sujetId=sujet.id AND soutenance.salleId=salle.id AND soutenance.sessionId=session.id and sujet.encadrantId=`teacher-details`.id AND sujet.id=`student-details`.sujetId AND (`student-details`.id= user.studentDetailsId AND `teacher-details`.id = user1.teacherDetailsId) \
+            AND presidentUser.teacherDetailsId=president.id AND president.id=jury.presidentId\
+            AND member1User.teacherDetailsId=member1Details.id AND member1Details.id=member1.teacherDetailsId\
+            AND member2User.teacherDetailsId=member2Details.id AND member2Details.id=member2.teacherDetailsId\
+            AND soutenance.juryId=jury.id and jury.id=member1.juryId and jury.id=member2.juryId and member1.teacherDetailsId>member2.teacherDetailsId'
+            +
+            ` AND (member1.teacherDetailsId = ${idTeacher} 
+             OR member2.teacherDetailsId = ${idTeacher} 
+             OR sujet.encadrantId=${idTeacher} OR presidentUser.id = ${idTeacher} )`
+        )
+        
+
+
+        return teacherSujets
+      }
+
+
     async delete(id:number):Promise<UpdateResult> {
         return await this.sujetRepositroy.softDelete(id);
     }
@@ -148,7 +247,6 @@ export class SujetService {
         file = await this.lettreAffecationPfeRepository.findOne({id});
     }else if (kind =='ficheprop') {
         file = await this.fichePropositionPfeRepository.findOne({id});
-
     }
     if (!file) {
         throw new NotFoundException(`${kind} d'${id} n'est pas trouvé`);

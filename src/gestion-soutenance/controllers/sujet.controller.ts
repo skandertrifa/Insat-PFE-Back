@@ -46,12 +46,30 @@ export class SujetController {
     findAll(@Query('page', ParseIntPipe) page = 1){
         return this.sujetService.findAllPaginated(page);
     }
+    
+
+
+    @UseGuards(AuthGuard('jwt'))
+    //idUSer : id etudiant ou bien id teacher et non pas id user du table user
+    @Get('teacher/:id')
+        async findAllOfTeacher(@Req() req,@Param('id') idTeacher : string) {
+            return this.sujetService.findAllOfTeacher(+idTeacher)
+        }
+
 
     @Get(':id')
     findOne(
         @Param('id') id:string
-    ){
+    ){  
         return this.sujetService.findOne(+id);
+    }
+
+    
+    @Get('/student/:id')
+    findOneOfStudent(
+        @Param('id') studentId:string
+    ){  
+        return this.sujetService.findOneOfStudent(+studentId);
     }
 
     @Put(':id')

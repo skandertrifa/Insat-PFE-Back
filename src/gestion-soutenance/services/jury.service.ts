@@ -1,6 +1,6 @@
+import { JuryEntity } from './../entities/jury.entity';
 import { TeacherEntity } from 'src/auth/entities/teacher.entity';
 import { JuryDto } from '../dto/jury.dto';
-import { JuryEntity } from '../entities/jury.entity';
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, UpdateResult } from 'typeorm';
@@ -32,6 +32,34 @@ export class JuryService {
             throw new BadRequestException("Enseignant inexistant ! ")
         }
     }
+
+    async update(juryUpdate:JuryDto,id:number): Promise<JuryEntity>{
+        //load teachers
+        const members = await this.teacherRepositroy.findByIds(juryUpdate.members)
+        const president = await this.teacherRepositroy.findOne(juryUpdate.president)
+        //create jury
+        if ((president) && (members.length === juryUpdate.members.length)){
+            
+            try{
+                const jury = await this.juryRepositroy.findOne(id)
+                if (!jury){
+                    new NotFoundException(`La jury d'id ${id} n'existe pas`);
+                }else{
+                    return await this.juryRepositroy.save({
+                        ...jury,
+                        members:members,
+                        president:president
+                    });
+                }
+                
+            }catch(e){
+                console.log(e);
+                throw new BadRequestException("Request not accepted")
+            }
+        }else{
+            throw new BadRequestException("Enseignant inexistant ! ")
+        }
+    }
     
     async findAll(): Promise<JuryEntity[]> {
         const juries=await this.juryRepositroy.find({relations:['president','members']});
@@ -52,4 +80,6 @@ export class JuryService {
     async delete(id:number):Promise<UpdateResult> {
         return await this.juryRepositroy.softDelete(id);
     }
+
+
 }

@@ -41,7 +41,7 @@ export class AuthService
 
     async login(credentilas: UserLoginDto){
         const { email, password} = credentilas;
-        const user = await this.userRepository.findOne({email});
+        const user = await this.userRepository.findOne({email},{relations:['studentDetails','teacherDetails']});
         if (!user){
             throw new NotFoundException('email or password incorrent');
         }
@@ -50,7 +50,10 @@ export class AuthService
                 const payload = {
                     email: user.email,
                     nom: user.nom,
-                    prenom: user.prenom
+                    prenom: user.prenom,
+                    role:user.role,
+                    studentDetails : user.studentDetails,
+                    teacherDetails: user.teacherDetails,
                 };
                 const jwt = this.jwtService.sign(payload);
                 return { 

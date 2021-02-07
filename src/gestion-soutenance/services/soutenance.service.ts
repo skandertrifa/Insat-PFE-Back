@@ -1,3 +1,4 @@
+import { StudentEntity } from './../../auth/entities/student.entity';
 import { SessionService } from '../../gestion-session/services/session.service';
 import { forwardRef, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -13,6 +14,7 @@ import {
   Pagination,
   IPaginationOptions,
 } from 'nestjs-typeorm-paginate';
+import { format, parse } from 'date-fns';
 const relations=["session","salle","sujet","jury"]
 
 @Injectable()
@@ -28,7 +30,10 @@ export class SoutenanceService {
     @Inject(forwardRef(() => SujetService)) 
     private readonly sujetService: SujetService,
     @Inject(forwardRef(() => JuryService)) 
-    private readonly juryService: JuryService
+    private readonly juryService: JuryService,
+
+    @InjectRepository(StudentEntity)
+    private readonly etudiantRepository: Repository<StudentEntity>,
   ) {}
   async getRelationEntities(dto)
   {
@@ -46,7 +51,6 @@ export class SoutenanceService {
     return objects
   }
   async create(createSoutenanceDto: CreateSoutenanceDto): Promise<Partial<SoutenanceEntity>> {
-    
     const objects=await this.getRelationEntities(createSoutenanceDto)
     //console.log("objects : ",objects)
     const soutenance =  await this.soutenanceRepository.create({...createSoutenanceDto,...objects});
@@ -103,6 +107,7 @@ export class SoutenanceService {
       soutenance.start = soutenance.dateDePassage;
       soutenance.session = await this.sessionService.findOne(soutenance.session.id);
       soutenance.jury = await this.juryService.findOne(soutenance.jury.id);
+      soutenance.sujet = await this.sujetService.findOne(soutenance.sujet.id);
     }
     return Soutenances
   }
@@ -128,16 +133,14 @@ export class SoutenanceService {
     return teacherSoutenances
   }
 
-  /* async findOneOfStudent(): Promise<SoutenanceEntity> {
-    Chercher la soutenance qui a un etuidant d'id meme id 
-    } */
+  
 
   async findOne(id: number): Promise<SoutenanceEntity> {
     const soutenance = await this.soutenanceRepository.findOne(id,{relations:relations});
-    console.log("soutenance : ",soutenance)
     if (soutenance){
       soutenance.session = await this.sessionService.findOne(soutenance.session.id);
       soutenance.jury = await this.juryService.findOne(soutenance.jury.id);
+      soutenance.sujet = await this.sujetService.findOne(soutenance.sujet.id);
       return soutenance
     }
 

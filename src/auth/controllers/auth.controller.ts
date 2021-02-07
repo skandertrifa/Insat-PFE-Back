@@ -1,8 +1,9 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { AuthService } from '../services/auth.service';
 import { UserRegisterDto } from '../dto/user-register';
 import { UserEntity } from '../entities/user.entity';
 import { UserLoginDto } from '../dto/user-login';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('auth')
 export class AuthController {
@@ -24,6 +25,8 @@ export class AuthController {
     ){
         return await this.authService.login(credentials);
     }
+
+    
     
     
 }
