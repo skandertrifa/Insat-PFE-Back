@@ -169,7 +169,7 @@ export class SujetService {
         const studentSujet = await this.userRepository.query(
             'SELECT \
             sujet.titre as titreSujet , sujet.description as sujetDescription, \
-            sujet.dateLimiteDepot as SujetdateLimiteDepot,\
+            sujet.dateLimiteDepot as SujetdateLimiteDepot,`student-details`.filiere as filiereEtudiant, \
             user1.nom as nomEncadrant ,user1.prenom as prenomEncadrant , user1.email as emailEncadrant, \
             user.nom as nomEtudiant , user.prenom as prenomEtudiant, user.email as emailEtudiant,\
             session.name as nomSession,\
@@ -201,7 +201,7 @@ export class SujetService {
         const teacherSujets = await this.teacherRepository.query(
             'SELECT \
             sujet.titre as titreSujet , sujet.description as sujetDescription, \
-            sujet.dateLimiteDepot as SujetdateLimiteDepot,\
+            sujet.dateLimiteDepot as SujetdateLimiteDepot, `student-details`.filiere as filiereEtudiant, \
             user1.nom as nomEncadrant ,user1.prenom as prenomEncadrant , user1.email as emailEncadrant, \
             user.nom as nomEtudiant , user.prenom as prenomEtudiant, user.email as emailEtudiant,\
             session.name as nomSession,\
