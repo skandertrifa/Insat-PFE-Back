@@ -93,7 +93,7 @@ export class SujetService {
         for(let i=0;i<sujets.length;i++){
             if (sujets[i].etudiant)
             sujets[i].etudiant = await this.etudiantRepository.findOne(sujets[i].etudiant.id);
-            if (sujets[i].etudiant)
+            if (sujets[i].encadrant)
             sujets[i].encadrant = await this.enseignantRepository.findOne(sujets[i].encadrant.id);
         }
         const paginationMeta= {
@@ -115,6 +115,7 @@ export class SujetService {
             .leftJoinAndSelect("sujet.encadrant", "encadrant")
             .where('sujet.id=:id',{id:id})
             .getOne();
+
             
             if (sujet){
             sujet.etudiant = await this.etudiantRepository.findOne(sujet.etudiant.id);
@@ -124,7 +125,6 @@ export class SujetService {
             }
    
             async update(id:number,sujetDtoUpdate:SujetDtoUpdate):Promise<SujetEntity>{
-                console.log(id,sujetDtoUpdate)
                 const sujet =  await this.sujetRepositroy.preload(
                     {
                     id:+id,
@@ -247,7 +247,6 @@ export class SujetService {
         file = await this.lettreAffecationPfeRepository.findOne({id});
     }else if (kind =='ficheprop') {
         file = await this.fichePropositionPfeRepository.findOne({id});
-
     }
     if (!file) {
         throw new NotFoundException(`${kind} d'${id} n'est pas trouvé`);

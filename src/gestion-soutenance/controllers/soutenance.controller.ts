@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Put, Param, Delete, Query, ParseIntPipe, UseGuards, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Put, Param, Delete, Query, ParseIntPipe, UseGuards, Req, UseInterceptors } from '@nestjs/common';
 import { SoutenanceService } from '../services/soutenance.service';
 import { CreateSoutenanceDto } from '../dto/create-soutenance.dto';
 import { UpdateSoutenanceDto } from '../dto/update-soutenance.dto';
@@ -25,11 +25,6 @@ export class SoutenanceController {
   }
 
   
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.soutenanceService.findOne(+id);
-  }
 
   @Put(':id')
   update(@Param('id') id: string, @Body() updateSoutenanceDto: UpdateSoutenanceDto) {
