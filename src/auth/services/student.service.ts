@@ -170,7 +170,6 @@ export class StudentService {
         //return await this.studentRepository.softDelete(id);
          try{
         const student = await this.studentRepository.findOne(id,{relations:['userDetails']})
-        console.log(student)
         return await this.studentRepository.softRemove(student);
 
       }catch(e){
