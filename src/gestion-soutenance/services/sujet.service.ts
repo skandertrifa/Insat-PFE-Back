@@ -29,6 +29,8 @@ export class SujetService {
         private rapportPfeRepository : Repository<RapportPfeEntity>,
         @InjectRepository(LettreAffectationPfeEntity)
         private readonly lettreAffecationPfeRepository:Repository<LettreAffectationPfeEntity>,
+        @InjectRepository(TeacherEntity)
+        private teacherRepository : Repository<TeacherEntity>,
     ){}
 
     async length():Promise<number>{
@@ -137,7 +139,7 @@ export class SujetService {
         
             }
 
-    async findOneOfStudent(idStudent:number):Promise<SujetEntity>{
+    /* async findOneOfStudent(idStudent:number):Promise<SujetEntity>{
         
         const etudiant = await this.etudiantRepository.findOne(idStudent);
         if (etudiant.sujet){
@@ -161,7 +163,76 @@ export class SujetService {
             throw new NotFoundException(`L'etudiant d'id ${idStudent} n'a pas de sujet`);
         }
 
+    } */
+
+    async findOneOfStudent(idStudent:number):Promise<SujetEntity[]>{
+        const studentSujet = await this.userRepository.query(
+            'SELECT \
+            sujet.titre as titreSujet , sujet.description as sujetDescription, \
+            sujet.dateLimiteDepot as SujetdateLimiteDepot,\
+            user1.nom as nomEncadrant ,user1.prenom as prenomEncadrant , user1.email as emailEncadrant, \
+            user.nom as nomEtudiant , user.prenom as prenomEtudiant, user.email as emailEtudiant,\
+            session.name as nomSession,\
+            salle.code as codeSalle,\
+            soutenance.titre as titreSoutenance,\
+            soutenance.dateDePassage,\
+            presidentUser.nom as nomPresidentJury , presidentUser.prenom as prenomPresidentJury , presidentUser.email as emailPresidentJury,\
+            member1User.nom as nomMember1Jury , member1User.prenom as prenomMember1Jury , member1User.email as emailMember1Jury,\
+            member2User.nom as nomMember2Jury , member2User.prenom as prenomMember2Jury , member2User.email as emailMember2Jury\
+            FROM \
+            `soutenance`,`sujet`,`session`,`user`,`student-details`,`teacher-details` , salle ,jury , `jury_members_teacher-details` as member1,\
+            `jury_members_teacher-details` as member2,\
+            `user`as user1,\
+            `user`as presidentUser, `teacher-details` as president,\
+            `user`as member1User, `teacher-details` as member1Details,\
+            `user`as member2User, `teacher-details` as member2Details\
+            WHERE soutenance.sujetId=sujet.id AND soutenance.salleId=salle.id AND soutenance.sessionId=session.id and sujet.encadrantId=`teacher-details`.id AND sujet.id=`student-details`.sujetId AND (`student-details`.id= user.studentDetailsId AND `teacher-details`.id = user1.teacherDetailsId) \
+            AND presidentUser.teacherDetailsId=president.id AND president.id=jury.presidentId\
+            AND member1User.teacherDetailsId=member1Details.id AND member1Details.id=member1.teacherDetailsId\
+            AND member2User.teacherDetailsId=member2Details.id AND member2Details.id=member2.teacherDetailsId\
+            AND soutenance.juryId=jury.id and jury.id=member1.juryId and jury.id=member2.juryId and member1.teacherDetailsId>member2.teacherDetailsId'
+            +
+            ' And `student-details`.id='+`${idStudent}`  
+        )
+
+        return studentSujet 
     }
+    async findAllOfTeacher(idTeacher:number): Promise<SujetEntity[]> {
+        const teacherSujets = await this.teacherRepository.query(
+            'SELECT \
+            sujet.titre as titreSujet , sujet.description as sujetDescription, \
+            sujet.dateLimiteDepot as SujetdateLimiteDepot,\
+            user1.nom as nomEncadrant ,user1.prenom as prenomEncadrant , user1.email as emailEncadrant, \
+            user.nom as nomEtudiant , user.prenom as prenomEtudiant, user.email as emailEtudiant,\
+            session.name as nomSession,\
+            salle.code as codeSalle,\
+            soutenance.titre as titreSoutenance,\
+            soutenance.dateDePassage,\
+            presidentUser.nom as nomPresidentJury , presidentUser.prenom as prenomPresidentJury , presidentUser.email as emailPresidentJury,\
+            member1User.nom as nomMember1Jury , member1User.prenom as prenomMember1Jury , member1User.email as emailMember1Jury,\
+            member2User.nom as nomMember2Jury , member2User.prenom as prenomMember2Jury , member2User.email as emailMember2Jury\
+            FROM \
+            `soutenance`,`sujet`,`session`,`user`,`student-details`,`teacher-details` , salle ,jury , `jury_members_teacher-details` as member1,\
+            `jury_members_teacher-details` as member2,\
+            `user`as user1,\
+            `user`as presidentUser, `teacher-details` as president,\
+            `user`as member1User, `teacher-details` as member1Details,\
+            `user`as member2User, `teacher-details` as member2Details\
+            WHERE soutenance.sujetId=sujet.id AND soutenance.salleId=salle.id AND soutenance.sessionId=session.id and sujet.encadrantId=`teacher-details`.id AND sujet.id=`student-details`.sujetId AND (`student-details`.id= user.studentDetailsId AND `teacher-details`.id = user1.teacherDetailsId) \
+            AND presidentUser.teacherDetailsId=president.id AND president.id=jury.presidentId\
+            AND member1User.teacherDetailsId=member1Details.id AND member1Details.id=member1.teacherDetailsId\
+            AND member2User.teacherDetailsId=member2Details.id AND member2Details.id=member2.teacherDetailsId\
+            AND soutenance.juryId=jury.id and jury.id=member1.juryId and jury.id=member2.juryId and member1.teacherDetailsId>member2.teacherDetailsId'
+            +
+            ` AND (member1.teacherDetailsId = ${idTeacher} 
+             OR member2.teacherDetailsId = ${idTeacher} 
+             OR sujet.encadrantId=${idTeacher} OR presidentUser.id = ${idTeacher} )`
+        )
+        
+
+
+        return teacherSujets
+      }
 
 
     async delete(id:number):Promise<UpdateResult> {

@@ -1,3 +1,4 @@
+import { SoutenanceEntity } from './soutenance.entity';
 import { StudentEntity } from './../../auth/entities/student.entity';
 import { IsDate, IsOptional } from 'class-validator';
 import { TimeStamp } from 'src/generics/timestamp';
@@ -46,5 +47,10 @@ export class SujetEntity extends TimeStamp{
 
     @ManyToOne(()=>TeacherEntity,teacher=>teacher.sujetsEncadres)
     encadrant:TeacherEntity
+
+    @OneToOne(()=>SoutenanceEntity,
+    { nullable: true, onUpdate: 'CASCADE', })
+    soutenance:SoutenanceEntity
+
 
 }

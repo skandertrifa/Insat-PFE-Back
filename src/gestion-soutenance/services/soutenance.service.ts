@@ -116,19 +116,7 @@ export class SoutenanceService {
     return teacherSoutenances
   }
 
-  async findOneOfStudent(idStudent:number) : Promise<SoutenanceEntity>  {
-      //check if that user has sujetID : 
-      const etudiant = await this.etudiantRepository.findOne(idStudent);
-      if (etudiant.sujet){
-        const sujetId = etudiant.sujet.id;
-        return await this.soutenanceRepository.createQueryBuilder('soutenance')
-        .leftJoinAndSelect("soutenance.sujet", "sujet")
-        .where("sujetId=:id",{id:sujetId})
-        .getOne()
-      }else{
-        throw new NotFoundException(`L'etudiant d'id ${idStudent} n'a pas de soutenance`);
-      }
-    }
+  
 
   async findOne(id: number): Promise<SoutenanceEntity> {
     const soutenance = await this.soutenanceRepository.findOne(id,{relations:relations});
@@ -162,4 +150,18 @@ export class SoutenanceService {
  
   }
 
+
+  async getCatalogue() : Promise<any[]>{
+ 
+    const result = await this.soutenanceRepository
+    .query('SELECT soutenance.id as id,soutenance.titre as titre,session.name as session,\
+    sujet.titre as sujetTitre,sujet.description as sujetDescription,user.nom as nomEtudiant,user.prenom as prenomEtudiant,`student-details`.`filiere`,\
+    user1.nom as nomEncadrant, user1.prenom as prenomEncadrant\
+    FROM `soutenance`,`sujet`,`session`,`user`,`student-details`,`teacher-details` ,`user`as user1\
+    WHERE soutenance.sujetId=sujet.id AND\
+    soutenance.sessionId=session.id and sujet.encadrantId=`teacher-details`.id AND sujet.id=`student-details`.sujetId AND (`student-details`.id= user.studentDetailsId AND `teacher-details`.id = user1.teacherDetailsId)')
+    
+    return result
+    
+    }
 }

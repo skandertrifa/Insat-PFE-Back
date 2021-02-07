@@ -24,19 +24,7 @@ export class SoutenanceController {
     
   }
 
-  @UseGuards(AuthGuard('jwt'))
-  //idUSer : id etudiant ou bien id teacher et non pas id user du table user
-  @Get(':idUser')
-  async findAllOfTeacher(@Req() req,@Param('idUser') idUser : string) {
-    if (req.user.role == 'teacher')
-      {      
-        return this.soutenanceService.findAllOfTeacher(+idUser);
-    }
-    if (req.user.role == 'user')
-      {
-        return this.soutenanceService.findOneOfStudent(+idUser);
-    }
-  }
+  
 
   @Get(':id')
   findOne(@Param('id') id: string) {
