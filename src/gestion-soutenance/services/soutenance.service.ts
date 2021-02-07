@@ -13,6 +13,7 @@ import {
   Pagination,
   IPaginationOptions,
 } from 'nestjs-typeorm-paginate';
+import { format, parse } from 'date-fns';
 const relations=["session","salle","sujet","jury"]
 
 @Injectable()
@@ -46,7 +47,6 @@ export class SoutenanceService {
     return objects
   }
   async create(createSoutenanceDto: CreateSoutenanceDto): Promise<Partial<SoutenanceEntity>> {
-    
     const objects=await this.getRelationEntities(createSoutenanceDto)
     //console.log("objects : ",objects)
     const soutenance =  await this.soutenanceRepository.create({...createSoutenanceDto,...objects});
@@ -87,6 +87,7 @@ export class SoutenanceService {
       soutenance.start = soutenance.dateDePassage;
       soutenance.session = await this.sessionService.findOne(soutenance.session.id);
       soutenance.jury = await this.juryService.findOne(soutenance.jury.id);
+      soutenance.sujet = await this.sujetService.findOne(soutenance.sujet.id);
     }
     return Soutenances
   }
@@ -118,10 +119,10 @@ export class SoutenanceService {
 
   async findOne(id: number): Promise<SoutenanceEntity> {
     const soutenance = await this.soutenanceRepository.findOne(id,{relations:relations});
-    console.log("soutenance : ",soutenance)
     if (soutenance){
       soutenance.session = await this.sessionService.findOne(soutenance.session.id);
       soutenance.jury = await this.juryService.findOne(soutenance.jury.id);
+      soutenance.sujet = await this.sujetService.findOne(soutenance.sujet.id);
       return soutenance
     }
 

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Put, Param, Delete, Query, ParseIntPipe, UseGuards, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Put, Param, Delete, Query, ParseIntPipe, UseGuards, Req, UseInterceptors } from '@nestjs/common';
 import { SoutenanceService } from '../services/soutenance.service';
 import { CreateSoutenanceDto } from '../dto/create-soutenance.dto';
 import { UpdateSoutenanceDto } from '../dto/update-soutenance.dto';
@@ -24,9 +24,14 @@ export class SoutenanceController {
     
   }
 
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.soutenanceService.findOne(+id);
+  }
+
   @UseGuards(AuthGuard('jwt'))
   //idUSer : id etudiant ou bien id teacher et non pas id user du table user
-  @Get(':idUser')
+  @Get('user/:idUser')
   async findAllOfTeacher(@Req() req,@Param('idUser') idUser : string) {
     if (req.user.role == 'teacher')
       {      
@@ -35,11 +40,6 @@ export class SoutenanceController {
     if (req.user.role == 'user')
       {//return this.soutenanceService.findOneOfStudent(idUser);
     }
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.soutenanceService.findOne(+id);
   }
 
   @Put(':id')
