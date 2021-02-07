@@ -1,3 +1,4 @@
+import { StudentEntity } from './../../auth/entities/student.entity';
 import { SessionService } from '../../gestion-session/services/session.service';
 import { forwardRef, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -28,7 +29,10 @@ export class SoutenanceService {
     @Inject(forwardRef(() => SujetService)) 
     private readonly sujetService: SujetService,
     @Inject(forwardRef(() => JuryService)) 
-    private readonly juryService: JuryService
+    private readonly juryService: JuryService,
+
+    @InjectRepository(StudentEntity)
+    private readonly etudiantRepository: Repository<StudentEntity>,
   ) {}
   async getRelationEntities(dto)
   {
@@ -112,9 +116,19 @@ export class SoutenanceService {
     return teacherSoutenances
   }
 
-  /* async findOneOfStudent(): Promise<SoutenanceEntity> {
-    Chercher la soutenance qui a un etuidant d'id meme id 
-    } */
+  async findOneOfStudent(idStudent:number) : Promise<SoutenanceEntity>  {
+      //check if that user has sujetID : 
+      const etudiant = await this.etudiantRepository.findOne(idStudent);
+      if (etudiant.sujet){
+        const sujetId = etudiant.sujet.id;
+        return await this.soutenanceRepository.createQueryBuilder('soutenance')
+        .leftJoinAndSelect("soutenance.sujet", "sujet")
+        .where("sujetId=:id",{id:sujetId})
+        .getOne()
+      }else{
+        throw new NotFoundException(`L'etudiant d'id ${idStudent} n'a pas de soutenance`);
+      }
+    }
 
   async findOne(id: number): Promise<SoutenanceEntity> {
     const soutenance = await this.soutenanceRepository.findOne(id,{relations:relations});

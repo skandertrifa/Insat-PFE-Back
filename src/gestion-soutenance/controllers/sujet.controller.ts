@@ -50,8 +50,15 @@ export class SujetController {
     @Get(':id')
     findOne(
         @Param('id') id:string
-    ){
+    ){  
         return this.sujetService.findOne(+id);
+    }
+
+    @Get('/student/:id')
+    findOneOfStudent(
+        @Param('id') studentId:string
+    ){  
+        return this.sujetService.findOneOfStudent(+studentId);
     }
 
     @Put(':id')

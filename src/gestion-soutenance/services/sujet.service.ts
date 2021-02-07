@@ -136,6 +136,34 @@ export class SujetService {
                   return this.findOne(id)
         
             }
+
+    async findOneOfStudent(idStudent:number):Promise<SujetEntity>{
+        
+        const etudiant = await this.etudiantRepository.findOne(idStudent);
+        if (etudiant.sujet){
+            const sujetId = etudiant.sujet.id;
+            const sujet=await this.sujetRepositroy.createQueryBuilder('sujet')
+            .leftJoinAndSelect("sujet.etudiant", "etudiant")
+            .leftJoinAndSelect("sujet.rapportPfe", "rapportPfe")
+            .leftJoinAndSelect("sujet.fichePropositionPfe", "fichePropositionPfe")
+            .leftJoinAndSelect("sujet.lettreAffectationPfe", "lettreAffectationPfe")
+            .leftJoinAndSelect("sujet.encadrant", "encadrant")
+            .where('sujet.id=:id',{id:sujetId})
+            .getOne();
+            
+            if (sujet){
+            sujet.etudiant = await this.etudiantRepository.findOne(sujet.etudiant.id);
+            sujet.encadrant = await this.enseignantRepository.findOne(sujet.encadrant.id);
+            }
+            return sujet
+            
+        }else{
+            throw new NotFoundException(`L'etudiant d'id ${idStudent} n'a pas de sujet`);
+        }
+
+    }
+
+
     async delete(id:number):Promise<UpdateResult> {
         return await this.sujetRepositroy.softDelete(id);
     }
