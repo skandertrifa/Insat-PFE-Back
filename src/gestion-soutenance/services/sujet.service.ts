@@ -168,13 +168,14 @@ export class SujetService {
     async findOneOfStudent(idStudent:number):Promise<SujetEntity[]>{
         const studentSujet = await this.userRepository.query(
             'SELECT \
-            sujet.titre as titreSujet , sujet.description as sujetDescription, \
+            sujet.id as id , sujet.titre as titreSujet , sujet.description as sujetDescription, \
             sujet.dateLimiteDepot as SujetdateLimiteDepot,`student-details`.filiere as filiereEtudiant, \
             user1.nom as nomEncadrant ,user1.prenom as prenomEncadrant , user1.email as emailEncadrant, \
             user.nom as nomEtudiant , user.prenom as prenomEtudiant, user.email as emailEtudiant,\
             session.name as nomSession,\
             salle.code as codeSalle,\
             soutenance.titre as titreSoutenance,\
+            soutenance.id as idSoutenance,\
             soutenance.dateDePassage,\
             presidentUser.nom as nomPresidentJury , presidentUser.prenom as prenomPresidentJury , presidentUser.email as emailPresidentJury,\
             member1User.nom as nomMember1Jury , member1User.prenom as prenomMember1Jury , member1User.email as emailMember1Jury,\
@@ -200,13 +201,14 @@ export class SujetService {
     async findAllOfTeacher(idTeacher:number): Promise<SujetEntity[]> {
         const teacherSujets = await this.teacherRepository.query(
             'SELECT \
-            sujet.titre as titreSujet , sujet.description as sujetDescription, \
+            sujet.id as id ,sujet.titre as titreSujet , sujet.description as sujetDescription, \
             sujet.dateLimiteDepot as SujetdateLimiteDepot, `student-details`.filiere as filiereEtudiant, \
             user1.nom as nomEncadrant ,user1.prenom as prenomEncadrant , user1.email as emailEncadrant, \
             user.nom as nomEtudiant , user.prenom as prenomEtudiant, user.email as emailEtudiant,\
             session.name as nomSession,\
             salle.code as codeSalle,\
             soutenance.titre as titreSoutenance,\
+            soutenance.id as idSoutenance,\
             soutenance.dateDePassage,\
             presidentUser.nom as nomPresidentJury , presidentUser.prenom as prenomPresidentJury , presidentUser.email as emailPresidentJury,\
             member1User.nom as nomMember1Jury , member1User.prenom as prenomMember1Jury , member1User.email as emailMember1Jury,\

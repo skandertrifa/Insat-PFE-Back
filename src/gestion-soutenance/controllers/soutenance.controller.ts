@@ -24,6 +24,12 @@ export class SoutenanceController {
     
   }
 
+  @Get(':id')
+  async findOne(@Param('id') id: string) {
+    console.log('hahah')
+    return this.soutenanceService.findOne(+id);
+  }
+
   
 
   @Put(':id')

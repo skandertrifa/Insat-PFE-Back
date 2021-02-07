@@ -122,15 +122,21 @@ export class SoutenanceService {
   async findOne(id: number): Promise<SoutenanceEntity> {
     const soutenance = await this.soutenanceRepository.findOne(id,{relations:relations});
     if (soutenance){
+      console.log('0')
       soutenance.session = await this.sessionService.findOne(soutenance.session.id);
+      console.log('1')
       soutenance.jury = await this.juryService.findOne(soutenance.jury.id);
+      console.log('2')
       soutenance.sujet = await this.sujetService.findOne(soutenance.sujet.id);
+      console.log('3')
+
       return soutenance
     }
 
       
     throw new NotFoundException(`La Soutenance d'id ${id} n'est pas disponible`);
   }
+
 
   async update(id: number, updateSoutenanceDto: UpdateSoutenanceDto): Promise<Partial<SoutenanceEntity>> {
     const objects=await this.getRelationEntities(updateSoutenanceDto)
