@@ -187,7 +187,7 @@ export class SujetService {
             `user`as presidentUser, `teacher-details` as president,\
             `user`as member1User, `teacher-details` as member1Details,\
             `user`as member2User, `teacher-details` as member2Details\
-            WHERE soutenance.sujetId=sujet.id AND soutenance.salleId=salle.id AND soutenance.sessionId=session.id and sujet.encadrantId=`teacher-details`.id AND sujet.id=`student-details`.sujetId AND (`student-details`.id= user.studentDetailsId AND `teacher-details`.id = user1.teacherDetailsId) \
+            WHERE soutenance.salleId=salle.id AND soutenance.sessionId=session.id and sujet.encadrantId=`teacher-details`.id AND sujet.id=`student-details`.sujetId AND (`student-details`.id= user.studentDetailsId AND `teacher-details`.id = user1.teacherDetailsId) \
             AND presidentUser.teacherDetailsId=president.id AND president.id=jury.presidentId\
             AND member1User.teacherDetailsId=member1Details.id AND member1Details.id=member1.teacherDetailsId\
             AND member2User.teacherDetailsId=member2Details.id AND member2Details.id=member2.teacherDetailsId\
@@ -220,7 +220,7 @@ export class SujetService {
             `user`as presidentUser, `teacher-details` as president,\
             `user`as member1User, `teacher-details` as member1Details,\
             `user`as member2User, `teacher-details` as member2Details\
-            WHERE soutenance.sujetId=sujet.id AND soutenance.salleId=salle.id AND soutenance.sessionId=session.id and sujet.encadrantId=`teacher-details`.id AND sujet.id=`student-details`.sujetId AND (`student-details`.id= user.studentDetailsId AND `teacher-details`.id = user1.teacherDetailsId) \
+            WHERE soutenance.salleId=salle.id AND soutenance.sessionId=session.id and sujet.encadrantId=`teacher-details`.id AND sujet.id=`student-details`.sujetId AND (`student-details`.id= user.studentDetailsId AND `teacher-details`.id = user1.teacherDetailsId) \
             AND presidentUser.teacherDetailsId=president.id AND president.id=jury.presidentId\
             AND member1User.teacherDetailsId=member1Details.id AND member1Details.id=member1.teacherDetailsId\
             AND member2User.teacherDetailsId=member2Details.id AND member2Details.id=member2.teacherDetailsId\
@@ -303,4 +303,16 @@ async updateLettreAffirmation(id:number,filePath){
     return await this.findOne(id);
 
 }
+    async findSujetByStudent(id){
+        const etudiant= await this.etudiantRepository.findOne(id)
+        const sujets=await this.sujetRepositroy.find({relations :["encadrant","etudiant"],
+        } );
+        for (const sujet of sujets){
+            if (sujet.etudiant.id === etudiant.id)
+                return sujet
+        }
+        return {}
+
+    }
+
 }
