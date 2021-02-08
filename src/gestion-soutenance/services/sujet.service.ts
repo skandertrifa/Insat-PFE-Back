@@ -11,6 +11,7 @@ import { FichePropositionPfeEntity } from '../entities/fichePropositionPfe.entit
 import { LettreAffectationPfeEntity } from '../entities/lettreAffectation.entity';
 import { RapportPfeEntity } from '../entities/rapportPfe.entity';
 import * as fs from "fs";
+import { JuryEntity } from '../entities/jury.entity';
 
 @Injectable()
 export class SujetService {
@@ -31,6 +32,8 @@ export class SujetService {
         private readonly lettreAffecationPfeRepository:Repository<LettreAffectationPfeEntity>,
         @InjectRepository(TeacherEntity)
         private teacherRepository : Repository<TeacherEntity>,
+        @InjectRepository(JuryEntity)
+        private juryRepository : Repository<JuryEntity>,
     ){}
 
     async length():Promise<number>{
@@ -165,75 +168,66 @@ export class SujetService {
 
     } */
 
-    async findOneOfStudent(idStudent:number):Promise<SujetEntity[]>{
-        const studentSujet = await this.userRepository.query(
-            'SELECT \
-            sujet.id as id , sujet.titre as titreSujet , sujet.description as sujetDescription, \
-            sujet.dateLimiteDepot as SujetdateLimiteDepot,`student-details`.filiere as filiereEtudiant, \
-            user1.nom as nomEncadrant ,user1.prenom as prenomEncadrant , user1.email as emailEncadrant, \
-            user.nom as nomEtudiant , user.prenom as prenomEtudiant, user.email as emailEtudiant,\
-            session.name as nomSession,\
-            salle.code as codeSalle,\
-            soutenance.titre as titreSoutenance,\
-            soutenance.id as idSoutenance,\
-            soutenance.dateDePassage,\
-            presidentUser.nom as nomPresidentJury , presidentUser.prenom as prenomPresidentJury , presidentUser.email as emailPresidentJury,\
-            member1User.nom as nomMember1Jury , member1User.prenom as prenomMember1Jury , member1User.email as emailMember1Jury,\
-            member2User.nom as nomMember2Jury , member2User.prenom as prenomMember2Jury , member2User.email as emailMember2Jury\
-            FROM \
-            `soutenance`,`sujet`,`session`,`user`,`student-details`,`teacher-details` , salle ,jury , `jury_members_teacher-details` as member1,\
-            `jury_members_teacher-details` as member2,\
-            `user`as user1,\
-            `user`as presidentUser, `teacher-details` as president,\
-            `user`as member1User, `teacher-details` as member1Details,\
-            `user`as member2User, `teacher-details` as member2Details\
-            WHERE soutenance.salleId=salle.id AND soutenance.sessionId=session.id and sujet.encadrantId=`teacher-details`.id AND sujet.id=`student-details`.sujetId AND (`student-details`.id= user.studentDetailsId AND `teacher-details`.id = user1.teacherDetailsId) \
-            AND presidentUser.teacherDetailsId=president.id AND president.id=jury.presidentId\
-            AND member1User.teacherDetailsId=member1Details.id AND member1Details.id=member1.teacherDetailsId\
-            AND member2User.teacherDetailsId=member2Details.id AND member2Details.id=member2.teacherDetailsId\
-            AND soutenance.juryId=jury.id and jury.id=member1.juryId and jury.id=member2.juryId and member1.teacherDetailsId>member2.teacherDetailsId'
-            +
-            ' And `student-details`.id='+`${idStudent}`  
-        )
-
-        return studentSujet 
+    async findOneOfStudent(id:number):Promise<SujetEntity[]>{
+        const sujets=await this.sujetRepositroy.find({
+            relations :["encadrant","etudiant","soutenance",
+            "soutenance.jury","soutenance.jury.president",
+            "soutenance.salle","soutenance.session","soutenance.session.annee"],
+            join : {alias: 'sujet',
+            leftJoinAndSelect: { 
+                etudiant: 'sujet.etudiant' ,
+                etudiantDetails: 'etudiant.userDetails' 
+            }
+            
+            },
+            where: qb => {
+            qb.where('etudiant.id = :idEtudiant', { idEtudiant: id })
+            }
+            
+            } );
+            return sujets
     }
-    async findAllOfTeacher(idTeacher:number): Promise<SujetEntity[]> {
-        const teacherSujets = await this.teacherRepository.query(
-            'SELECT \
-            sujet.id as id ,sujet.titre as titreSujet , sujet.description as sujetDescription, \
-            sujet.dateLimiteDepot as SujetdateLimiteDepot, `student-details`.filiere as filiereEtudiant, \
-            user1.nom as nomEncadrant ,user1.prenom as prenomEncadrant , user1.email as emailEncadrant, \
-            user.nom as nomEtudiant , user.prenom as prenomEtudiant, user.email as emailEtudiant,\
-            session.name as nomSession,\
-            salle.code as codeSalle,\
-            soutenance.titre as titreSoutenance,\
-            soutenance.id as idSoutenance,\
-            soutenance.dateDePassage,\
-            presidentUser.nom as nomPresidentJury , presidentUser.prenom as prenomPresidentJury , presidentUser.email as emailPresidentJury,\
-            member1User.nom as nomMember1Jury , member1User.prenom as prenomMember1Jury , member1User.email as emailMember1Jury,\
-            member2User.nom as nomMember2Jury , member2User.prenom as prenomMember2Jury , member2User.email as emailMember2Jury\
-            FROM \
-            `soutenance`,`sujet`,`session`,`user`,`student-details`,`teacher-details` , salle ,jury , `jury_members_teacher-details` as member1,\
-            `jury_members_teacher-details` as member2,\
-            `user`as user1,\
-            `user`as presidentUser, `teacher-details` as president,\
-            `user`as member1User, `teacher-details` as member1Details,\
-            `user`as member2User, `teacher-details` as member2Details\
-            WHERE soutenance.salleId=salle.id AND soutenance.sessionId=session.id and sujet.encadrantId=`teacher-details`.id AND sujet.id=`student-details`.sujetId AND (`student-details`.id= user.studentDetailsId AND `teacher-details`.id = user1.teacherDetailsId) \
-            AND presidentUser.teacherDetailsId=president.id AND president.id=jury.presidentId\
-            AND member1User.teacherDetailsId=member1Details.id AND member1Details.id=member1.teacherDetailsId\
-            AND member2User.teacherDetailsId=member2Details.id AND member2Details.id=member2.teacherDetailsId\
-            AND soutenance.juryId=jury.id and jury.id=member1.juryId and jury.id=member2.juryId and member1.teacherDetailsId>member2.teacherDetailsId'
-            +
-            ` AND (member1.teacherDetailsId = ${idTeacher} 
-             OR member2.teacherDetailsId = ${idTeacher} 
-             OR sujet.encadrantId=${idTeacher} OR presidentUser.id = ${idTeacher} )`
-        )
+
+
+    async findAllOfTeacher(id:number): Promise<SujetEntity[]> {
+        const sujets=await this.sujetRepositroy.find({
+            join : {
+                alias: 'sujet',
+                
+             leftJoinAndSelect: { 
+                 encadrant : 'sujet.encadrant',
+                 encadrantUser : 'encadrant.userDetails',
+                 soutenance: 'sujet.soutenance',
+                 session: 'soutenance.session',
+                 annee: 'session.annee',
+                 salle : 'soutenance.salle',
+                 jury : 'soutenance.jury',
+                 president : 'jury.president',
+                 presidentUser : 'president.userDetails',
+                 members : 'jury.members',
+                 membersUser : 'members.userDetails',
+                 },
+                 
+            },
+            where: qb => {
+                qb.where( ':id = (members.id) ', { id: id }
+                ).orWhere('president.id = :id', { id: id }
+                ).orWhere('encadrant.id = :id', { id: id })
+              },
+            
+              relations :["encadrant","etudiant","soutenance",
+            "soutenance.jury","soutenance.jury.president","soutenance.salle"],
+            
+        } );
+        for (const sujet of sujets)
+        {
+            sujet.soutenance.jury= await this.juryRepository.findOne(
+                sujet.soutenance.jury.id,
+                {relations : ["president"]})
+        }
+        return sujets
         
-
-
-        return teacherSujets
+ 
       }
 
 
@@ -314,25 +308,5 @@ async updateLettreAffirmation(id:number,filePath){
         return {}
 
     }
-
-    async testingSujetByStudent(id){
-        const etudiant= await this.etudiantRepository.findOne(id)
-        const sujets=await this.sujetRepositroy.find({
-            join: {
-                alias: "sujet",
-                leftJoinAndSelect: {
-                    soutenance: "sujet.soutenance",
-                    
-                },
-            
-            },
-            relations :["encadrant","etudiant"],
-        } );
-        for (const sujet of sujets){
-            if (sujet.etudiant.id === etudiant.id)
-                return sujet
-        }
-        return {}
-    }
-
+        
 }
