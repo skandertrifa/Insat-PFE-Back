@@ -22,7 +22,4 @@ export class TeacherEntity extends TimeStamp {
     @OneToMany(()=>SujetEntity,sujet=>sujet.encadrant)
     sujetsEncadres: SujetEntity[]
     
-    to_json(){
-        
-    }
 }

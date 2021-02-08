@@ -215,15 +215,16 @@ export class SujetService {
                 ).orWhere('encadrant.id = :id', { id: id })
               },
             
-              relations :["encadrant","etudiant","soutenance",
-            "soutenance.jury","soutenance.jury.president","soutenance.salle"],
+              relations :["encadrant","etudiant",],
             
         } );
         for (const sujet of sujets)
         {
-            sujet.soutenance.jury= await this.juryRepository.findOne(
-                sujet.soutenance.jury.id,
-                {relations : ["president"]})
+            if (sujet.soutenance !== null && sujet.soutenance.jury!==null ){
+                sujet.soutenance.jury= await this.juryRepository.findOne(
+                    sujet.soutenance.jury.id,
+                    {relations : ["president"]})
+            }
         }
         return sujets
         
@@ -286,27 +287,49 @@ async updateRapportPfe(user:UserEntity,filePath){
 }
 
 // admin updates lettre affirmation
-async updateLettreAffirmation(id:number,filePath){
-    const newSujet = await this.findOne(id)
-    const lettreAffirmation = await this.lettreAffecationPfeRepository.create(
-        {path:filePath}
-    )
-    newSujet.lettreAffectationPfe = lettreAffirmation
-    console.log(newSujet)
-    await this.sujetRepositroy.save(newSujet)
-    return await this.findOne(id);
-
-}
-    async findSujetByStudent(id){
-        const etudiant= await this.etudiantRepository.findOne(id)
-        const sujets=await this.sujetRepositroy.find({relations :["encadrant","etudiant"],
-        } );
-        for (const sujet of sujets){
-            if (sujet.etudiant.id === etudiant.id)
-                return sujet
-        }
-        return {}
+    async updateLettreAffirmation(id:number,filePath){
+        const newSujet = await this.findOne(id)
+        const lettreAffirmation = await this.lettreAffecationPfeRepository.create(
+            {path:filePath}
+        )
+        newSujet.lettreAffectationPfe = lettreAffirmation
+        console.log(newSujet)
+        await this.sujetRepositroy.save(newSujet)
+        return await this.findOne(id);
 
     }
-        
+
+    async findSujetById(id){
+        const sujet=await this.sujetRepositroy.find({
+            join : {
+                alias: 'sujet',
+                
+             leftJoinAndSelect: { 
+                 encadrant : 'sujet.encadrant',
+                 encadrantUser : 'encadrant.userDetails',
+                 soutenance: 'sujet.soutenance',
+                 session: 'soutenance.session',
+                 annee: 'session.annee',
+                 salle : 'soutenance.salle',
+                 jury : 'soutenance.jury',
+                 president : 'jury.president',
+                 presidentUser : 'president.userDetails',
+                 members : 'jury.members',
+                 membersUser : 'members.userDetails',
+                 },
+                 
+            },
+            where: qb => {
+                qb.where( ':id = (sujet.id) ', { id: id })
+              },
+            
+              relations :["encadrant","etudiant","soutenance",
+            "soutenance.jury","soutenance.jury.president","soutenance.salle"],
+            
+        } );
+        if (sujet.length===0)
+            return {}
+        return sujet[0]
+    }
+            
 }

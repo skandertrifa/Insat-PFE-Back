@@ -72,6 +72,13 @@ export class SujetController {
         return this.sujetService.findOneOfStudent(+studentId);
     }
 
+    @Get('/sujet/:id')
+    findSujetById(
+        @Param('id') studentId:string
+    ){  
+        return this.sujetService.findSujetById(+studentId);
+    }
+
     @Put(':id')
     updateOne(
         @Param('id') id:string,
@@ -88,10 +95,6 @@ export class SujetController {
         return this.sujetService.delete(+id);
 
     }
-    @Get('findStudent/:id')
-    findSujetByStudent(@Param('id') id: string) {
-    return this.sujetService.findSujetByStudent(+id);
-  }
 
     // downlaod fiche prop
     @Get('/downloadFicheProp/:id')
