@@ -45,7 +45,7 @@ export class SoutenanceEntity extends TimeStamp{
     { nullable: true, onUpdate: 'CASCADE', })
     jury: JuryEntity;
 
-    @OneToOne(()=>SujetEntity,
+    @OneToOne(()=>SujetEntity,(sujet : SujetEntity) => sujet.soutenance,
     { nullable: true, onUpdate: 'CASCADE', })
     @JoinColumn()
     sujet:SujetEntity

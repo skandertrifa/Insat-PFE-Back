@@ -315,4 +315,24 @@ async updateLettreAffirmation(id:number,filePath){
 
     }
 
+    async testingSujetByStudent(id){
+        const etudiant= await this.etudiantRepository.findOne(id)
+        const sujets=await this.sujetRepositroy.find({
+            join: {
+                alias: "sujet",
+                leftJoinAndSelect: {
+                    soutenance: "sujet.soutenance",
+                    
+                },
+            
+            },
+            relations :["encadrant","etudiant"],
+        } );
+        for (const sujet of sujets){
+            if (sujet.etudiant.id === etudiant.id)
+                return sujet
+        }
+        return {}
+    }
+
 }

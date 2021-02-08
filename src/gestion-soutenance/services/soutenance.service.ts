@@ -2,7 +2,7 @@ import { StudentEntity } from './../../auth/entities/student.entity';
 import { SessionService } from '../../gestion-session/services/session.service';
 import { forwardRef, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, UpdateResult } from 'typeorm';
+import { LessThanOrEqual, Repository, UpdateResult } from 'typeorm';
 import { CreateSoutenanceDto } from '../dto/create-soutenance.dto';
 import { UpdateSoutenanceDto } from '../dto/update-soutenance.dto';
 import { SoutenanceEntity } from '../entities/soutenance.entity';
@@ -154,16 +154,20 @@ export class SoutenanceService {
 
 
   async getCatalogue() : Promise<any[]>{
- 
-    const result = await this.soutenanceRepository
-    .query('SELECT soutenance.id as id,soutenance.titre as titre,session.name as session,\
-    sujet.titre as sujetTitre,sujet.description as sujetDescription,user.nom as nomEtudiant,user.prenom as prenomEtudiant,`student-details`.`filiere`,\
-    user1.nom as nomEncadrant, user1.prenom as prenomEncadrant\
-    FROM `soutenance`,`sujet`,`session`,`user`,`student-details`,`teacher-details` ,`user`as user1\
-    WHERE soutenance.sujetId=sujet.id AND\
-    soutenance.sessionId=session.id and sujet.encadrantId=`teacher-details`.id AND sujet.id=`student-details`.sujetId AND (`student-details`.id= user.studentDetailsId AND `teacher-details`.id = user1.teacherDetailsId)')
-    
-    return result
-    
+    const nextDay=new Date()
+    nextDay.setDate(nextDay.getDate() + 1)
+    const catalogue=await this.soutenanceRepository.find(
+      {
+        where : {
+        dateDePassage : LessThanOrEqual(nextDay),
+      },  
+        relations : ["session","salle","sujet","jury",
+        "jury.president","sujet.rapportPfe","sujet.encadrant",
+        "sujet.lettreAffectationPfe","sujet.fichePropositionPfe","sujet.etudiant"],
+        
+      }
+    )
+    return catalogue
     }
 }
+

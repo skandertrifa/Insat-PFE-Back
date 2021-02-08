@@ -48,7 +48,7 @@ export class SujetEntity extends TimeStamp{
     @ManyToOne(()=>TeacherEntity,teacher=>teacher.sujetsEncadres)
     encadrant:TeacherEntity
 
-    @OneToOne(()=>SoutenanceEntity,
+    @OneToOne(()=>SoutenanceEntity,soutenance=>soutenance.sujet,
     { nullable: true, onUpdate: 'CASCADE', })
     soutenance:SoutenanceEntity
 

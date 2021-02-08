@@ -92,6 +92,10 @@ export class SujetController {
     findSujetByStudent(@Param('id') id: string) {
     return this.sujetService.findSujetByStudent(+id);
   }
+  @Get('testStudent/:id')
+    testSujetByStudent(@Param('id') id: string) {
+    return this.sujetService.testingSujetByStudent(+id);
+  }
 
     // downlaod fiche prop
     @Get('/downloadFicheProp/:id')
